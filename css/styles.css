@@ -8,6 +8,45 @@ body {
   color: #FFF;
 }
 
+.onlight,
+.onlight .asteroid-rings,
+.onlight .moon,
+.onlight .small,
+.onlight .asteroid,
+.onlight .moon-orbit,
+.onlight .label-line,
+.onlight .ruler-label,
+.onlight .x.axis,
+.onlight .tick,
+.onlight .ruler {
+  stroke: #111;
+  background-color: #fff;
+  color: #222;
+}
+
+.onlight .asteroid,
+.onlight .big {
+  fill: #222;
+}
+
+.onlight .huge {
+  fill: darkred;
+  stroke: darkred;
+}
+
+.x.axis {
+  fill: #AAA;
+  font-size: 10px;
+}
+
+.x.axis .domain {
+  display: none;
+}
+
+.x.axis .tick {
+  stroke: #AAA;
+}
+
 html, body {
   height: 100%;
   padding: 0;
@@ -28,8 +67,51 @@ circle.earth {
 
 .asteroid {
   fill: #CCC;
-  stroke: #DDD;
-  stroke-width: 2px;
+  stroke: #CCC;
+  stroke-width: 1px;
+}
+
+.asteroid-rings, .asteroid-rings-huge {
+  fill: #fff;
+  fill-opacity: 0.1;
+  stroke: #FFF;
+  stroke-width: 1px;
+  display: none;
+}
+
+.controls {
+  list-style-type: none;
+}
+
+.show-rings-big .asteroid-rings-big, .show-rings-big .asteroid-rings-huge {
+  display: block;
+}
+
+.show-rings-huge .asteroid-rings-huge {
+  display: block;
+}
+
+.show-rings-big .asteroid:not(.huge), .show-rings-huge .asteroid:not(.huge) {
+  opacity: 0.5;
+}
+
+.huge {
+  fill: red;
+  stroke: red;
+}
+
+.big {
+  fill: #CCC;
+  stroke: #999;
+}
+
+.small {
+  stroke: #555;
+  fill: #AAA;
+}
+
+.selected {
+  stroke-width: 5px;
 }
 
 .moon-orbit {
@@ -89,4 +171,34 @@ text.ruler-label {
 
 .right {
   text-align: right;
+}
+
+.voronoi {
+  fill: transparent;
+  stroke-width: 1px;
+  stroke: none;
+}
+
+.sources {
+  position: absolute;
+  bottom: 5px;
+  left: 20px;
+  z-index: 1010101;
+}
+
+.popover {
+  background-color: rgba(10,10,10,1);
+  height: 120px;
+  width: 220px;
+  position: absolute;
+  pointer-events: none;
+  font-size: 12px;
+  z-index:101011101;
+  padding: 0 4px;
+  display: none;
+}
+
+.onlight .popover {
+  background-color: white;
+  box-shadow: #333 1px 1px 7px;
 }

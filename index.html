@@ -11,21 +11,48 @@
 <body class="tk-source-code-pro">
   <div class="metadata">
     <div class="row center">
-      <h1>Asteroids &amp; Us</h1>
+      <h1>Asteroids</h1>
     </div>
     <div class="row">
       <div class="four columns">
-        <span>Hello</span>
+        <ul class="controls">
+          <li>
+            <label>
+              <input type="checkbox" name="show-big"/>
+              Show asteroids 50m and above
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="show-huge"/>
+              Show asteroids 100m and above
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" name="show-onlight"/>
+              View on light background
+            </label>
+          </li>
+        </ul>
       </div>
       <div class="four columns center">
-        <span>Asteroids &amp; Us is a visualization of known and tracked Near Earth Objects, or NEOs. Each asteroid's orbit is different, which means some of them come much closer to hitting Earth than others. </span>
+        <span>Asteroids is a visualization of known and tracked Near Earth Objects, or NEOs. Each asteroid's orbit is different, which means some of them come much closer to hitting Earth than others. </span>
       </div>
       <div class="four columns right">
         <span>Hello</span>
       </div>
     </div>
   </div>
+  <a target="_blank" href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=dist&sdir=ASC&tlim=far_future&dmax=0.05AU&max_rows=500&fmt=full&action=Display+Table&show=1" class="sources">Data Sources</a>
   <svg id="sky"></svg>
+  <div id="popover" class="popover">
+    <div>Name: <span id="name"></span></div>
+    <div>Approach date: <span id="approach"></span></div>
+    <div>Nominal distance: <span id="nominal"></span></div>
+    <div>Minimum distance: <span id="minimum"></span></div>
+    <div>H: <span id="h"></span></div>
+  </div>
   <script src="node_modules/d3/d3.js"></script>
   <script src="node_modules/moment/moment.js"></script>
   <script src="js/asteroids.js"></script>
