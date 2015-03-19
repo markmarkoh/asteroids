@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #1A1A1A; //from nyt kepler
+  overflow: hidden;
+  color: #FFF;
+}
+
+html, body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+circle.earth {
+  fill: blue;
+  stroke: green;
+  stroke-width: 2px;
+}
+
+.moon {
+  fill: #DFDFDF;
+  stroke-width: 2px;
+  stroke: #FFF;
+}
+
+.asteroid {
+  fill: #CCC;
+  stroke: #DDD;
+  stroke-width: 2px;
+}
+
+.moon-orbit {
+  fill: none;
+  stroke-width: 1px;
+  stroke: #AAA;
+  stroke-dasharray: 1,3;
+}
+
+svg {
+  border: 1px dotted #AAA;
+  position: absolute;
+  height: 80%;
+  width: 100%;
+  bottom: 0;
+  top: 20%;
+  left: 0;
+  right: 0;
+}
+
+.label-line {
+  stroke: #AAA;
+  stroke-width: 1px;
+  stroke-dasharray: 1,1;
+  fill: none;
+}
+
+line.guide {
+  stroke: #AAA;
+  stroke-dasharray: 2, 1;
+}
+
+line.guide-light {
+  stroke: #444;
+  stroke-dasharray: 2, 1;
+}
+
+line.ruler {
+  stroke: #AAA;
+  stroke-dasharray: 1,1,3,1;
+}
+
+text.ruler-label {
+  fill: #AAA;
+  font-size: 12px;
+  stroke: none;
+  font-family: "source-code-pro", monospace;
+}
+
+.center {
+  text-align: center;
+}
+
+.metadata {
+  padding: 0 20px;
+}
+
+.right {
+  text-align: right;
+}
