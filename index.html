@@ -3,91 +3,124 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="A visualization of known and tracked Near Earth Objects, or NEOs, as tracked by NASA's JPL NEO program.
+Many NEOs aren't discovered until they've nearly passed us in their orbit, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.">
+  <meta http-equiv="cleartype" content="on">
+  <meta property="og:title" content="Asteroid (NEO) Tracker and data visualization">
+  <meta property="og:type" content="website">
+  <meta property="og:description" content="A visualization of known and tracked Near Earth Objects, or NEOs, as tracked by NASA's JPL NEO program.
+Many NEOs aren't discovered until they've nearly passed us in their orbit, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.">
+  <meta property="og:image" content="http://markmarkoh.com/asteroids/snap.png">
   <link rel="stylesheet" href="css/normalize.css" />
   <link rel="stylesheet" href="css/skeleton.css" />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="shortcut icon" href="favicon.ico">
   <link rel="apple-touch-icon-precomposed" href="favicon.ico">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+
   <title>Asteroids</title>
 </head>
-<body class="tk-source-code-pro">
+<body>
   <div id="metadata">
     <div class="row center">
-      <h2>Asteroids Tracker</h2>
-      <h2 class="warning">Not ready for mobile yet</h2>
+      <h2>Asteroids: Near Earth Approaches</h2>
     </div>
     <div class="row">
       <div class="four columns">
         <ul class="controls">
           <li>
-            <label>
+            <label title="As determined by it's asteroid absolute V-magnitude (H) value being 24.5 or lower">
               <input type="checkbox" name="show-big"/>
               Show asteroids 50m and above <em>(2x larger than <a href="http://en.wikipedia.org/wiki/Chelyabinsk_meteor" target="_blank">Chelyabinsk meteor</a>)</em>
             </label>
           </li>
           <li>
-            <label>
-              <input type="checkbox" name="show-huge"/>
+            <label title="As determined by it's asteroid absolute V-magnitude (H) value being 21 or lower">
+              <input type="checkbox" name="show-huge" title="As determined by it's asteroid absolute V-magnitude (H) value being 21 or lower"/>
               Show asteroids 200m and above
             </label>
           </li>
           <li>
-            <label>
-              <input type="checkbox" name="show-widget"/>
-              Show NASA's Asteroid Watch Widget
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" name="show-onlight"/>
-              View on light background
+            <label class="new" title="As determined by the year of it being discovered being the same year as it's close approach date">
+              <input type="checkbox" name="show-new"/>
+               Highlight asteroids we didn't find until they neared Earth
             </label>
           </li>
         </ul>
       </div>
       <div class="four columns center">
-        <div class="description">A visualization of known and tracked <a href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=date&sdir=ASC&tlim=far_future&dmax=10LD&max_rows=500&action=Display+Table&show=1" target="_blank">Near Earth Objects, or NEOs, as tracked by NASA.</a><br/>
-          Many NEOs aren't discovered until they've nearly passed us in their orbit, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.
+        <div class="description">A visualization of known and tracked <a href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=date&sdir=ASC&tlim=far_future&dmax=10LD&max_rows=500&action=Display+Table&show=1" target="_blank">Near Earth Asteroids, or NEAs</a> that will make a close approach to Earth within the next 12 months, or have made a close approach within the last 12 months, as tracked by <a target="_blank" href="http://neo.jpl.nasa.gov/index.html">NASA's JPL NEO program.</a><br/>
+          Many NEAs aren't discovered until they've nearly passed us in their orbit of the sun, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.
         </div>
       </div>
-      <div class="four columns right">
+      <div class="four columns right key tk-source-code-pro">
           <div>1 Lunar Distance = 384,400km</div>
-          <div>Lunar Diameter = 3,475km</div>
-          <div>Earth Diameter = 12,742km</div>
-          <div>Objects englarged for visibility</div>
+          <div>Moon Diameter = 3,475km</div>
+          <!-- <div>Earth Diameter = 12,742km</div> -->
           <div>
-          <svg class="legend" width="445px" height="20px">
-            <text x="10" y="15">Small (&lt; 10m)</text>
-            <circle class="asteroid small" cx="150" cy="10" r="1"></circle>
-            <circle class="asteroid small" cx="180" cy="10" r="2"></circle>
-            <circle class="asteroid big" cx="210" cy="10" r="2"></circle>
-            <circle class="asteroid big" cx="240" cy="10" r="3"></circle>
-            <circle class="asteroid huge" cx="270" cy="10" r="3"></circle>
-            <circle class="asteroid huge" cx="300" cy="10" r="4"></circle>
-            <text x="320" y="15">Large (&gt; 300m)</text>
+          <svg class="legend" width="375px" height="20px">
+            <text x="5" y="15">Small (&lt; 10m)</text>
+            <circle class="asteroid small" cx="95" cy="10" r="1"></circle>
+            <circle class="asteroid small" cx="125" cy="10" r="2"></circle>
+            <circle class="asteroid big" cx="155" cy="10" r="2"></circle>
+            <circle class="asteroid big" cx="185" cy="10" r="3"></circle>
+            <circle class="asteroid huge" cx="215" cy="10" r="3"></circle>
+            <circle class="asteroid huge" cx="245" cy="10" r="4"></circle>
+            <text x="265" y="15">Large (&gt; 300m)</text>
           </svg>
         </div>
       </div>
     </div>
   </div>
-  <a target="_blank" href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=dist&sdir=ASC&tlim=far_future&dmax=0.05AU&max_rows=500&fmt=full&action=Display+Table&show=1" class="sources">NEO Data Sources</a>
-  <a target="_blank" href="https://github.com/markmarkoh/asteroids" class="git sources">Project Source Code</a>
   <div id="ticks"></div>
-  <svg id="sky"></svg>
-  <div id="popover" class="popover">
-    <div>Approach date: <span id="approach"></span></div>
-    <div>Name: <span id="name"></span></div>
-    <div>Nominal distance: <span id="nominal"></span></div>
-    <div>Minimum distance: <span id="minimum"></span></div>
-    <div>H (abs. magnitude): <span id="h"></span></div>
-    <div>Est. size: <span id="size"></span></div>
+  <div class="tk-source-code-pro" id="viz">
+    <svg id="sky"></svg>
   </div>
-  <iframe class="widget" src="http://www.jpl.nasa.gov/asteroidwatch/widget/"></iframe>
+  <div class="links">
+    <ul>
+      <li class="help">
+          <div>Asteroids englarged for visibility</div>
+      </li>
+      <li class="control">
+        <label>
+          <input type="checkbox" name="show-onlight"/>
+          View on light background
+        </label>
+      </li>
+      <li>
+        <a target="_blank" href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=dist&sdir=ASC&tlim=far_future&dmax=0.05AU&max_rows=500&fmt=full&action=Display+Table&show=1" class="sources">NEO Data Sources</a>
+      </li>
+<!--       <li>
+        <a target="_blank" href="http://neo.jpl.nasa.gov/index.html">More NEO information</a>
+      </li> -->
+      <li>
+        <a target="_blank" href="https://github.com/markmarkoh/asteroids" class="git sources">Project Source Code</a>
+      </li>
+  </div>
+  <div id="popover" class="popover">
+    <div class="name"><strong id="name"></strong></div>
+    <div><span id="approach"></span></div>
+    <div><span id="minimum"></span></div>
+<!--     <div>H (abs. magnitude): <span id="h"></span></div>
+ -->    
+    <div>estimated size is <strong id="size"></strong></div>
+  </div>
+  <iframe class="widget" data-src="http://www.jpl.nasa.gov/asteroidwatch/widget/"></iframe>
   <script src="node_modules/d3/d3.js"></script>
   <script src="node_modules/keyboard.js"></script>
   <script src="node_modules/moment/moment.js"></script>
   <script src="js/asteroids.js"></script>
   <script src="//use.typekit.net/bvj7kmh.js"></script>
   <script>try{Typekit.load();}catch(e){}</script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-36315921-3', 'auto');
+    ga('send', 'pageview');
+
+  </script>
 </body>
 </html>

@@ -37,6 +37,12 @@ body {
   stroke: darkred;
 }
 
+.onlight.show-rings-new .new {
+  fill: #FF7200;
+  stroke: #FF7200;
+  color: #FF7200;
+}
+
 .x.axis {
   fill: #AAA;
   font-size: 10px;
@@ -57,8 +63,8 @@ html, body {
 }
 
 circle.earth {
-  fill: blue;
-  stroke: green;
+  fill: #4118DC;
+  stroke: #00D100;
   stroke-width: 2px;
 }
 
@@ -92,9 +98,11 @@ circle.earth {
 }
 
 .controls em {
-  font-size: 10px;
+  font-size: 12px;
 }
 
+/* !important needed since hover hides/shows rings as well, needs to be overriden 
+   in case of rings being shown and hover at same time */
 .show-rings-big .asteroid-rings-big, .show-rings-big .asteroid-rings-huge {
   display: block !important;
 }
@@ -103,18 +111,28 @@ circle.earth {
   display: block !important;
 }
 
+.show-rings-new .asteroid-rings-new {
+  /*display: block !important;*/
+}
+
 .show-rings-big .asteroid:not(.huge), .show-rings-huge .asteroid:not(.huge) {
   opacity: 0.5;
 }
 
 .huge {
-  fill: red;
-  stroke: red;
+  fill: #AD2929;
+  stroke: #AD2929;
 }
 
 .big {
   fill: #CCC;
   stroke: #BBB;
+}
+
+.show-rings-new .new {
+  fill: #79A226;
+  color: #79A226;
+  stroke: #79A226;
 }
 
 .small {
@@ -183,8 +201,52 @@ text.ruler-label {
 #metadata {
   padding: 0 20px;
   font-size: 0.85em;
-  max-height: 200px;
 }
+
+/* Larger than tablet */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  {
+  #metadata {
+    font-size: 0.85em;
+  }
+
+  .ticks {
+    font-size: 11px;
+  }
+
+  .legend {
+    transform: scale(0.68);
+    margin-left: -20px;
+  }
+
+  .controls, .controls em {
+    font-size: 0.88em;
+  }
+
+}
+
+@media (min-width: 550px) and (max-device-width : 1024px)  {
+  h2 {
+    font-size: 3.5rem;
+  }
+  .legend {
+    transform: scaleX(0.7)scaleY(0.8);
+    margin-left: -60px;
+  }
+  .center {
+    width: 60% !important;
+  }
+  .key {
+    position: absolute;
+    top: 160px;
+    /*text-align: left !important;*/
+    right: 20px;
+  }
+  #viz {
+    min-height: 500px;
+  }
+}
+
+
 
 .right {
   text-align: right;
@@ -196,32 +258,61 @@ text.ruler-label {
   stroke: none;
 }
 
-.sources {
+.links {
   position: absolute;
   bottom: 5px;
-  left: 20px;
+  right: 10px;
+  left: 0;
+}
+
+.links ul {
+  list-style-type: none;
+}
+.links ul li {
+  float: right;
+  margin-left: 20px;
+  font-size: 11px;
+}
+
+.links .control input {
+  display: none;
+}
+
+.links .right {
+  float: right;
+}
+
+.links .help {
+  font-size: 11px;
+}
+.sources {
   z-index: 1010101;
 }
 
-.git {
-  left: 200px;
-}
-
 .popover {
-  background-color: rgba(10,10,10,1);
-  height: 120px;
-  width: 220px;
+  /*background-color: rgba(10,10,10,1);*/
+  height: 105px;
+  width: 250px;
   position: absolute;
   pointer-events: none;
   font-size: 12px;
   z-index:101011101;
   padding: 0 4px;
   display: none;
+  background-color: white;
+  color: #111;
+  box-shadow: #333 1px 1px 7px;
+  border-radius: 2px;
 }
 
-.onlight .popover {
-  background-color: white;
-  box-shadow: #333 1px 1px 7px;
+.popover strong {
+  font-size: 1.1em;
+}
+
+.popover .name {
+  padding: 4px 2px;
+  border-bottom: 1px dashed #999;
+  margin-bottom: 5px;
 }
 
 .warning {
@@ -239,6 +330,10 @@ text.ruler-label {
 
   #sky {
     display: block;
+  }
+
+  body {
+    line-height: 1em;
   }
 }
 
