@@ -213,15 +213,21 @@ text.ruler-label {
   stroke: none;
 }
 
-.sources {
+.links {
   position: absolute;
   bottom: 5px;
-  left: 20px;
-  z-index: 1010101;
+  left: 0;
 }
 
-.git {
-  left: 200px;
+.links ul {
+  list-style-type: none;
+}
+.links ul li {
+  float: left;
+  margin-left: 20px;
+}
+.sources {
+  z-index: 1010101;
 }
 
 .popover {

@@ -269,7 +269,7 @@ Vrelative(km/s): "7.02"
           .attr("class", "ruler")
           .attr("x1", function(d) {
             if ( d % 5 === 0 || d === 1 ) {
-              return width / 2 - 17.5;
+              return width / 2 - 20.5;
             }
 
             return width / 2 - 10;
@@ -279,7 +279,7 @@ Vrelative(km/s): "7.02"
           })
           .attr("x2", function(d) {
             if ( d % 5 === 0 || d === 1) {
-              return width / 2 + 17.5;
+              return width / 2 + 20.5;
             }
 
             return width / 2 + 10;
@@ -303,7 +303,7 @@ Vrelative(km/s): "7.02"
             return d + " LDs";
           })
           .attr("class", "ruler-label")
-          .attr("x", width / 2 - 35)
+          .attr("x", width / 2 - 45)
           .attr("y", function(d) {
             return lunar_distance_scale(LUNAR_DISTANCE * d) + 3;
           });
@@ -416,14 +416,18 @@ Vrelative(km/s): "7.02"
   }
 
   draw();
-  window.addEventListener('resize', function() {
-    console.log('resziing');
-    document.getElementById('ticks').innerHTML = '';
-    document.getElementById('sky').innerHTML = '';
-    draw();
-  });
+  // window.addEventListener('resize', function() {
+  //   document.getElementById('ticks').innerHTML = '';
+  //   var viz = document.getElementById('viz');
+  //   Array.prototype.forEach.call(viz.children, function(child) { viz.removeChild(child) });
+  //   viz.innerHTML = '';
+  //   var svg = document.createElement('svg');
+  //   svg.setAttribute('id', 'sky');
+  //   viz.appendChild(svg)
+  //   draw();
+  // });
   //important stuff
-  var easter_egg = new Konami('http://www.freeasteroids.org/');
+  new K('http://www.freeasteroids.org/');
  
 
 })(window)

@@ -46,7 +46,7 @@
         </ul>
       </div>
       <div class="four columns center">
-        <div class="description">A visualization of known and tracked <a href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=date&sdir=ASC&tlim=far_future&dmax=10LD&max_rows=500&action=Display+Table&show=1" target="_blank">Near Earth Objects, or NEOs, as tracked by NASA.</a><br/>
+        <div class="description">A visualization of known and tracked <a href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=date&sdir=ASC&tlim=far_future&dmax=10LD&max_rows=500&action=Display+Table&show=1" target="_blank">Near Earth Objects, or NEOs</a>, as tracked by <a target="_blank" href="http://neo.jpl.nasa.gov/index.html">NASA's JPL NEO program.</a><br/>
           Many NEOs aren't discovered until they've nearly passed us in their orbit, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.
         </div>
       </div>
@@ -56,24 +56,36 @@
           <div>Earth Diameter = 12,742km</div>
           <div>Objects englarged for visibility</div>
           <div>
-          <svg class="legend" width="445px" height="20px">
-            <text x="10" y="15">Small (&lt; 10m)</text>
-            <circle class="asteroid small" cx="150" cy="10" r="1"></circle>
-            <circle class="asteroid small" cx="180" cy="10" r="2"></circle>
-            <circle class="asteroid big" cx="210" cy="10" r="2"></circle>
-            <circle class="asteroid big" cx="240" cy="10" r="3"></circle>
-            <circle class="asteroid huge" cx="270" cy="10" r="3"></circle>
-            <circle class="asteroid huge" cx="300" cy="10" r="4"></circle>
-            <text x="320" y="15">Large (&gt; 300m)</text>
+          <svg class="legend" width="400px" height="20px">
+            <text x="5" y="15">Small (&lt; 10m)</text>
+            <circle class="asteroid small" cx="120" cy="10" r="1"></circle>
+            <circle class="asteroid small" cx="150" cy="10" r="2"></circle>
+            <circle class="asteroid big" cx="180" cy="10" r="2"></circle>
+            <circle class="asteroid big" cx="210" cy="10" r="3"></circle>
+            <circle class="asteroid huge" cx="240" cy="10" r="3"></circle>
+            <circle class="asteroid huge" cx="270" cy="10" r="4"></circle>
+            <text x="290" y="15">Large (&gt; 300m)</text>
           </svg>
         </div>
       </div>
     </div>
   </div>
-  <a target="_blank" href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=dist&sdir=ASC&tlim=far_future&dmax=0.05AU&max_rows=500&fmt=full&action=Display+Table&show=1" class="sources">NEO Data Sources</a>
-  <a target="_blank" href="https://github.com/markmarkoh/asteroids" class="git sources">Project Source Code</a>
   <div id="ticks"></div>
-  <svg id="sky"></svg>
+  <div id="viz">
+    <svg id="sky"></svg>
+  </div>
+  <div class="links">
+    <ul>
+      <li>
+        <a target="_blank" href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=dist&sdir=ASC&tlim=far_future&dmax=0.05AU&max_rows=500&fmt=full&action=Display+Table&show=1" class="sources">NEO Data Sources</a>
+      </li>
+      <li>
+        <a target="_blank" href="http://neo.jpl.nasa.gov/index.html">More NEO information</a>
+      </li>
+      <li>
+        <a target="_blank" href="https://github.com/markmarkoh/asteroids" class="git sources">Project Source Code</a>
+      </li>
+  </div>
   <div id="popover" class="popover">
     <div>Approach date: <span id="approach"></span></div>
     <div>Name: <span id="name"></span></div>
