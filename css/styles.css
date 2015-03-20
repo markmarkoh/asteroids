@@ -186,6 +186,14 @@ text.ruler-label {
   max-height: 200px;
 }
 
+/* Larger than tablet */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  {
+  #metadata {
+    font-size: 0.75em;
+  }
+}
+
+
 .right {
   text-align: right;
 }
