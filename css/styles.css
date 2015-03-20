@@ -197,7 +197,7 @@ text.ruler-label {
   }
 
   .legend {
-    transform: scale(0.9);
+    transform: scale(0.81);
     margin-left: -50px;
   }
 }
