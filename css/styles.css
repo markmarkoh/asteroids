@@ -191,6 +191,15 @@ text.ruler-label {
   #metadata {
     font-size: 0.75em;
   }
+
+  .ticks {
+    font-size: 11px;
+  }
+
+  .legend {
+    transform: scale(0.9);
+    margin-left: -50px;
+  }
 }
 
 

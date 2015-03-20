@@ -1,37 +1,50 @@
 (function(root) {
-  var sky = d3.select("#sky");
-  var header_height = document.getElementById("metadata").offsetHeight + document.getElementById("ticks").offsetHeight;
-  var window_height = window.innerHeight;
 
-  var height = window_height - header_height - 25;
-  sky.attr("height", height);
+    //drawGuideLines("guide-light", [0.42, 0.58]);
+  var sky, height, width;
+  var lunar_distance_scale, time_scale, size_scale, hmag_scale;
+  var LUNAR_DISTANCE, MAX_LDS;
+  var offsetTop, offsetBottom;
+  function draw() {
+    sky = d3.select("#sky");
+    var header_height = document.getElementById("metadata").offsetHeight + document.getElementById("ticks").offsetHeight;
+    var window_height = window.innerHeight;
+    height = window_height - header_height - 25;
+    width = ~~sky.style("width").replace("px", "");
+    sky.attr("height", height);
 
-  var width = ~~sky.style("width").replace("px", "");
+    offsetTop = 40;
+    offsetBottom = 40;
 
-  var offsetTop = 40;
-  var offsetBottom = 40;
+    LUNAR_DISTANCE = 384400; //km
+    MAX_LDS = 10;
 
-  var LUNAR_DISTANCE = 384400; //km
-  var MAX_LDS = 10;
+    lunar_distance_scale = d3.scale.linear()
+      .domain([0, MAX_LDS * LUNAR_DISTANCE])
+      .range([10, height - 50]);
 
-  var lunar_distance_scale = d3.scale.linear()
-    .domain([0, MAX_LDS * LUNAR_DISTANCE])
-    .range([10, height - 50]);
+    var date = new Date();
+    time_scale = d3.time.scale()
+      .domain([ d3.time.year.offset(date, -1), d3.time.year.offset(date, 1)])
+      .rangeRound([width, 0]);
 
-  var date = new Date();
-  var time_scale = d3.time.scale()
-    .domain([ d3.time.year.offset(date, -1), d3.time.year.offset(date, 1)])
-    .rangeRound([width, 0]);
+    size_scale = d3.scale.log()
+      .domain([30, 17])
+      .range([0.5, 4]);
 
-  var size_scale = d3.scale.log()
-    .domain([30, 17])
-    .range([0.5, 4]);
-
-  var hmag_scale = d3.scale.linear()
+    hmag_scale = d3.scale.linear()
     .domain([30, 29,  28,   27,   26, 25,  24, 23, 22,   21,  20,  19, 18])
     .range([4.5, 6.5, 11.5, 17.5, 27, 42.5, 65, 90, 170,  210, 330, 670, 1000]);
 
-  root.lunar_distance_scale = lunar_distance_scale;
+    drawGuideLines("guide-light", 4);
+    drawGuideLines("guide-light", 8);
+    drawRulers();
+    drawTimeAxis();
+    drawEarthAndMoon();
+    drawNeos();
+    setupControls();
+  }
+
 /*
 
 CA DistanceMinimum(LD/AU): "3.6/0.0094"
@@ -201,7 +214,7 @@ Vrelative(km/s): "7.02"
   }
 
   function drawGuideLines(classname, months) {
-    var data = new Date();
+    var date = new Date();
     var guides = sky.append("g");
 
     guides.selectAll("guide")
@@ -402,15 +415,13 @@ Vrelative(km/s): "7.02"
 
   }
 
-  //drawGuideLines("guide-light", [0.42, 0.58]);
-  drawGuideLines("guide-light", 4);
-  drawGuideLines("guide-light", 8);
-  drawRulers();
-  drawTimeAxis();
-  drawEarthAndMoon();
-  drawNeos();
-  setupControls();
-
+  draw();
+  window.addEventListener('resize', function() {
+    console.log('resziing');
+    document.getElementById('ticks').innerHTML = '';
+    document.getElementById('sky').innerHTML = '';
+    draw();
+  });
   //important stuff
   var easter_egg = new Konami('http://www.freeasteroids.org/');
  
