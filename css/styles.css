@@ -83,12 +83,21 @@ circle.earth {
   list-style-type: none;
 }
 
+.controls li {
+  margin-bottom: 0px;
+  line-height: 10px;
+}
+
+.controls em {
+  font-size: 10px;
+}
+
 .show-rings-big .asteroid-rings-big, .show-rings-big .asteroid-rings-huge {
-  display: block;
+  display: block !important;
 }
 
 .show-rings-huge .asteroid-rings-huge {
-  display: block;
+  display: block !important;
 }
 
 .show-rings-big .asteroid:not(.huge), .show-rings-huge .asteroid:not(.huge) {
@@ -102,12 +111,12 @@ circle.earth {
 
 .big {
   fill: #CCC;
-  stroke: #999;
+  stroke: #BBB;
 }
 
 .small {
   stroke: #555;
-  fill: #AAA;
+  fill: #999;
 }
 
 .selected {
@@ -121,13 +130,12 @@ circle.earth {
   stroke-dasharray: 1,3;
 }
 
-svg {
+#sky {
   border: 1px dotted #AAA;
-  position: absolute;
-  height: 80%;
+  height: 70%;
   width: 100%;
+  /*margin-top: 50px;*/
   bottom: 0;
-  top: 20%;
   left: 0;
   right: 0;
 }
@@ -167,6 +175,7 @@ text.ruler-label {
 
 .metadata {
   padding: 0 20px;
+  min-height: 200px;
 }
 
 .right {
@@ -186,6 +195,10 @@ text.ruler-label {
   z-index: 1010101;
 }
 
+.git {
+  left: 200px;
+}
+
 .popover {
   background-color: rgba(10,10,10,1);
   height: 120px;
@@ -201,4 +214,63 @@ text.ruler-label {
 .onlight .popover {
   background-color: white;
   box-shadow: #333 1px 1px 7px;
+}
+
+.warning {
+  display: block;
+}
+
+#sky {
+  display: none;
+}
+
+@media (min-width: 550px) {
+  .warning {
+    display: none;
+  }
+
+  #sky {
+    display: block;
+  }
+}
+
+.widget {
+  border: none;
+  z-index: 1010212;
+  position: absolute;
+  width: 400px;
+  top: 200px;
+  height: 500px;
+  visibility: hidden;
+}
+
+.show-widget .widget {
+  visibility: visible;
+}
+
+.legend {
+
+}
+
+.asteroid-labels {
+  fill: #FFF;
+  font-size: 10px;
+}
+
+.legend text {
+  fill: #FFF;
+}
+
+#ticks {
+  position: relative;
+  margin-top: 40px;
+  width: 100%;
+  height: 30px;
+  border: 1px dotted #AAA;
+  border-bottom-width: 0;
+}
+
+.ticks {
+  position: absolute;
+  bottom: 0px;
 }

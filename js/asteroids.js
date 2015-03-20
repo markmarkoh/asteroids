@@ -3,11 +3,11 @@
   var width = ~~sky.style("width").replace("px", "");
   var height = ~~sky.style("height").replace("px", "");
 
-  var offsetTop = 20;
-  var offsetBottom = 20;
+  var offsetTop = 40;
+  var offsetBottom = 80;
 
   var LUNAR_DISTANCE = 384400; //km
-  var MAX_LDS = 20;
+  var MAX_LDS = 10;
 
   var lunar_distance_scale = d3.scale.linear()
     .domain([0, MAX_LDS * LUNAR_DISTANCE])
@@ -18,9 +18,13 @@
     .domain([ d3.time.year.offset(date, -1), d3.time.year.offset(date, 1)])
     .rangeRound([0, width]);
 
-  var size_scale = d3.scale.linear()
-    .domain([30, 0])
-    .range([1, 3]);
+  var size_scale = d3.scale.log()
+    .domain([30, 17])
+    .range([0.5, 4]);
+
+  var hmag_scale = d3.scale.linear()
+    .domain([30, 29,  28,   27,   26, 25,  24, 23, 22,   21,  20,  19, 18])
+    .range([4.5, 6.5, 11.5, 17.5, 27, 42.5, 65, 90, 170,  210, 330, 670, 1000]);
 
   root.lunar_distance_scale = lunar_distance_scale;
 /*
@@ -35,7 +39,7 @@ Vinfinity(km/s): "6.98"
 Vrelative(km/s): "7.02"
 */
   function drawNeos() {
-    d3.csv("/data/future.csv")
+    d3.csv("data/future.csv")
     .row(function(d) {
       if ( d["Object"] === "") return;
       return {
@@ -47,6 +51,11 @@ Vrelative(km/s): "7.02"
       }
     })
     .get(function(errors, rows) {
+
+      rows = rows.filter(function(row) {
+        return row.ldNominal <= MAX_LDS + 0.2;
+      });
+
       var asteroids = sky.append("g").attr("class", "asteroids");
       asteroids.selectAll("asteroid")
         .data(rows)
@@ -54,10 +63,10 @@ Vrelative(km/s): "7.02"
           .append("ellipse")
           .attr("class", function(d) {
             d.el = this;
-            if ( d.h < 24 ) {
+            if ( d.h < 21 ) {
               return "asteroid huge";
             }
-            if ( d.h < 27 ) {
+            if ( d.h < 24.5 ) {
               return "asteroid big";
             }
             if ( d.h > 28 ) {
@@ -70,7 +79,7 @@ Vrelative(km/s): "7.02"
             return size_scale(d.h);
           })
           .attr("rx", function(d) {
-            return size_scale(d.h) - Math.random();
+            return size_scale(d.h) - (Math.random() *.3);
           })
           .attr("cy", function(d) {
             return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)
@@ -83,16 +92,40 @@ Vrelative(km/s): "7.02"
             return "rotate(34, " + [time_scale(d.closeApproach._d), lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)].join(",") + ")";
           });
 
+      var bigOnes = rows.filter(function(val) { return val.h < 21 });
+      asteroids.selectAll('ruler-label')
+        .data(bigOnes)
+        .enter()
+          .append('text')
+          .attr("class", "ruler-label")
+          .text(function(d) {
+            try {
+              return /\((.*)\)/.exec(d.name)[1];
+            }
+            catch(e) {
+              return d.name;
+            }
+          })
+          .attr('x', function(d) {
+            return time_scale(d.closeApproach._d) - 110; 
+          })
+          .attr('y', function(d) {
+            return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) + 20;
+          })
+          .attr('foo', function(d) {
+            drawLabelLine(asteroids, d3.select(this).node(), d3.select(d.el).node())
+          });
+
       asteroids.selectAll("asteroid-rings")
         .data(rows)
         .enter()
           .append("circle")
           .attr("class", function(d) {
             d.ringEl = this;
-            if ( d.h < 20 ) {
+            if ( d.h < 21 ) {
               return "asteroid-rings-huge asteroid-rings"
             }
-            if ( d.h <= 24 ) {
+            if ( d.h <= 24.5 ) {
               return "asteroid-rings-big asteroid-rings";
             }
             return "asteroid-rings";
@@ -119,6 +152,9 @@ Vrelative(km/s): "7.02"
     document.querySelector('input[name=show-onlight]').addEventListener('change', function(e) {
       document.body.classList.toggle('onlight');
     })
+    document.querySelector('input[name=show-widget]').addEventListener('change', function(e) {
+      document.body.classList.toggle('show-widget');
+    })
   }
 
   function drawEarthAndMoon() {
@@ -136,7 +172,7 @@ Vrelative(km/s): "7.02"
       .attr("x", width / 2 - 90)
       .attr("y", 40)
 
-    drawLabelLine(earthAndMoon, earthLabel, earth);
+    drawLabelLine(earthAndMoon, earthLabel.node(), earth.node());
 
     var moon = earthAndMoon.append("circle")
       .attr("class", "moon")
@@ -150,7 +186,7 @@ Vrelative(km/s): "7.02"
       .attr("x", width / 2 - 83)
       .attr("y", lunar_distance_scale(LUNAR_DISTANCE) + 35)
 
-    drawLabelLine(earthAndMoon, moonLabel, moon);
+    drawLabelLine(earthAndMoon, moonLabel.node(), moon.node());
 
     earthAndMoon.append("circle")
       .attr("class", "moon-orbit")
@@ -159,28 +195,43 @@ Vrelative(km/s): "7.02"
       .attr("cy", 0);  
   }
 
-  function drawGuideLines(classname, distances) {
-    sky.append("g").selectAll("guide")
-      .data(distances)
+  function drawGuideLines(classname, months) {
+    var data = new Date();
+    var guides = sky.append("g");
+
+    guides.selectAll("guide")
+      .data([time_scale(d3.time.month.offset(date, -1 * months)), time_scale(d3.time.month.offset(date, months))])
       .enter()
         .append("line")
           .attr("x1", function(d) {
-            return d * width;
+            return d;
           })
           .attr("y1", offsetTop)
           .attr("x2", function(d) {
-            return d * width;
+            return d;
           })
           .attr("y2", height - offsetBottom)
           .attr("class", classname);
+
+    return;
+    guides.append("text")
+      .attr("class", "ruler-label ")
+      .text(function() {
+        return 'Will pass ' + moment(d3.time.month.offset(data, months)).fromNow();
+      })
+      .attr("x", function() {
+        return time_scale(d3.time.month.offset(date, months))
+      })
+      .attr("y", offsetTop - 10)
+
   }
 
   function drawLabelLine(container, elStart, elEnd) {
     container.append("path")
       .attr("class", "label-line")
       .attr("d", function() {
-        var elStartBox = elStart.node().getBBox();
-        var elEndBox = elEnd.node().getBBox();
+        var elStartBox = elStart.getBBox();
+        var elEndBox = elEnd.getBBox();
         var step1 = "M" + (elStartBox.x + elStartBox.width + 3) + "," + (elStartBox.y + (elStartBox.height / 2));
         var step2 = "L" + (elStartBox.x + elStartBox.width + 25) + "," + (elStartBox.y + (elStartBox.height / 2));
         var step3 = "L" + (elEndBox.x + (elEndBox.width / 2) - 3) + "," + (elEndBox.y + elEndBox.height + 3);
@@ -241,13 +292,39 @@ Vrelative(km/s): "7.02"
 
   function drawTimeAxis() {
 
+    var data = [-8, -4, 0, 4, 8];
+    var date = new Date();
+
+    d3.select('#ticks')
+      .selectAll('ticks')    
+      .data(data)
+      .enter()
+        .append("div")
+        .attr("class", "ticks")
+        .text(function(d) {
+          if ( d === 0 ) return "Approaching this week";
+          if ( d < 0 ) {
+            return Math.abs(d) + " months ago";
+          }
+          return "In " + d + " months";
+        })
+        .style("left", function(d) {
+          var offset = 50;
+          if ( d === 0 ) offset = 80;
+          return time_scale(d3.time.month.offset(date, d)) - offset + "px"
+        })
+
+
+    return;
     var xAxis = d3.svg.axis()
         .scale(time_scale)
         .orient("top")
         .ticks(d3.time.months, 3)
         .tickSize(10, 0)
         .tickPadding(5)
-        .tickFormat(d3.time.format("%b %Y"));
+        .tickFormat(function(d) {
+          return d3.time.format("%b %Y")
+        });
 
     sky.append("g")
         .attr("class", "x axis")
@@ -276,7 +353,7 @@ Vrelative(km/s): "7.02"
       .data(voronoi(data))
     .enter().append("path")
       .attr("d", function(d) { 
-        if ( !d ) {
+        if ( !d || d.length < 2) {
          return null;
         }
         return "M" + d.join("L") + "Z";
@@ -289,20 +366,36 @@ Vrelative(km/s): "7.02"
       popover.select("#approach").text(d.closeApproach.fromNow())
       popover.select("#minimum").text(d.ldMinimum + ' LDs')
       popover.select("#nominal").text(d.ldNominal + ' LDs')
-      popover.select("#h").text(d.h)
-      popover[0][0].style.top = d.el.getBBox().y + 10 + 'px';
-      popover[0][0].style.left = d.el.getBBox().x - 10 + 'px';
-      popover[0][0].style.display = 'block';
+      popover.select("#size").text(hmag_scale(d.h).toFixed(2) + ' meters');
+      popover.select("#h").text(d.h);
+      var popEl = popover[0][0];
+      popEl.style.top = d.el.getBBox().y + 100 + 'px';
+
+      if (d.el.cx.baseVal.value > width / 2 ) {
+        popEl.style.left = d.el.getBBox().x - 200 + 'px';
+      }
+      else {
+        popEl.style.left = d.el.getBBox().x + 20 + 'px';
+      }
+      popEl.style.display = 'block';
       d.ringEl.style.display = 'block';
     })
     .on("mouseout", function(d) {
       d.ringEl.style.display = 'none';
     });
 
+    d3.select('.metadata').on('mouseenter', function() {
+      popover[0][0].style.display = 'none';
+    });
+    d3.select('#sky').on('mouseenter', function() {
+      popover[0][0].style.display = 'block';
+    });
+
   }
 
-  //drawGuideLines("guide", [0.42, 0.58]);
-  //drawGuideLines("guide-light", [0.25, 0.75]);
+  //drawGuideLines("guide-light", [0.42, 0.58]);
+  drawGuideLines("guide-light", 4);
+  drawGuideLines("guide-light", 8);
   drawRulers();
   drawTimeAxis();
   drawEarthAndMoon();
