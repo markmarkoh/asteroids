@@ -1,10 +1,15 @@
 (function(root) {
   var sky = d3.select("#sky");
+  var header_height = document.getElementById("metadata").offsetHeight + document.getElementById("ticks").offsetHeight;
+  var window_height = window.innerHeight;
+
+  var height = window_height - header_height - 25;
+  sky.attr("height", height);
+
   var width = ~~sky.style("width").replace("px", "");
-  var height = ~~sky.style("height").replace("px", "");
 
   var offsetTop = 40;
-  var offsetBottom = 80;
+  var offsetBottom = 40;
 
   var LUNAR_DISTANCE = 384400; //km
   var MAX_LDS = 10;
@@ -16,7 +21,7 @@
   var date = new Date();
   var time_scale = d3.time.scale()
     .domain([ d3.time.year.offset(date, -1), d3.time.year.offset(date, 1)])
-    .rangeRound([0, width]);
+    .rangeRound([width, 0]);
 
   var size_scale = d3.scale.log()
     .domain([30, 17])
@@ -53,7 +58,7 @@ Vrelative(km/s): "7.02"
     .get(function(errors, rows) {
 
       rows = rows.filter(function(row) {
-        return row.ldNominal <= MAX_LDS + 0.2;
+        return row.ldNominal <= MAX_LDS + 0.5;
       });
 
       var asteroids = sky.append("g").attr("class", "asteroids");
@@ -274,6 +279,7 @@ Vrelative(km/s): "7.02"
       .data(range.filter(function(d) { return d % 5 === 0 || d === 1}))
       .enter()
         .append("text")
+          .attr("text-anchor", "end")
           .text(function(d) {
             if ( d === 1 ) {
               return d + " Lunar Distance (LD)"; //, or about " + LUNAR_DISTANCE.toLocaleString() + "km from Earth";
@@ -284,7 +290,7 @@ Vrelative(km/s): "7.02"
             return d + " LDs";
           })
           .attr("class", "ruler-label")
-          .attr("x", width / 2 + 35)
+          .attr("x", width / 2 - 35)
           .attr("y", function(d) {
             return lunar_distance_scale(LUNAR_DISTANCE * d) + 3;
           });
@@ -303,14 +309,17 @@ Vrelative(km/s): "7.02"
         .attr("class", "ticks")
         .text(function(d) {
           if ( d === 0 ) return "Approaching this week";
+          if ( d === d3.max(data) ) return "Approaching in " + d + " months";
           if ( d < 0 ) {
             return Math.abs(d) + " months ago";
           }
+
           return "In " + d + " months";
         })
         .style("left", function(d) {
           var offset = 50;
-          if ( d === 0 ) offset = 80;
+          if ( d === 0 || d === d3.max(data) ) offset = 88;
+
           return time_scale(d3.time.month.offset(date, d)) - offset + "px"
         })
 
@@ -384,7 +393,7 @@ Vrelative(km/s): "7.02"
       d.ringEl.style.display = 'none';
     });
 
-    d3.select('.metadata').on('mouseenter', function() {
+    d3.select('#metadata').on('mouseenter', function() {
       popover[0][0].style.display = 'none';
     });
     d3.select('#sky').on('mouseenter', function() {
@@ -401,5 +410,9 @@ Vrelative(km/s): "7.02"
   drawEarthAndMoon();
   drawNeos();
   setupControls();
+
+  //important stuff
+  var easter_egg = new Konami('http://www.freeasteroids.org/');
+ 
 
 })(window)

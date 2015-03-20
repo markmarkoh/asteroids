@@ -6,12 +6,14 @@
   <link rel="stylesheet" href="css/normalize.css" />
   <link rel="stylesheet" href="css/skeleton.css" />
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon-precomposed" href="favicon.ico">
   <title>Asteroids</title>
 </head>
 <body class="tk-source-code-pro">
-  <div class="metadata">
+  <div id="metadata">
     <div class="row center">
-      <h1>Asteroid Tracking</h1>
+      <h2>Asteroids Tracker</h2>
       <h2 class="warning">Not ready for mobile yet</h2>
     </div>
     <div class="row">
@@ -44,24 +46,25 @@
         </ul>
       </div>
       <div class="four columns center">
-        <span>A visualization of known and tracked Near Earth Objects, or NEOs. Each asteroid's orbit is different, which means some of them come much closer to hitting Earth than others.<br/>
-          Many NEOs aren't discovered until they've already passed us in their orbit.
-        </span>
+        <div class="description">A visualization of known and tracked <a href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=date&sdir=ASC&tlim=far_future&dmax=10LD&max_rows=500&action=Display+Table&show=1" target="_blank">Near Earth Objects, or NEOs, as tracked by NASA.</a><br/>
+          Many NEOs aren't discovered until they've nearly passed us in their orbit, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.
+        </div>
       </div>
       <div class="four columns right">
           <div>1 Lunar Distance = 384,400km</div>
           <div>Lunar Diameter = 3,475km</div>
           <div>Earth Diameter = 12,742km</div>
+          <div>Objects englarged for visibility</div>
           <div>
-          <svg class="legend" width="465px" height="20px">
+          <svg class="legend" width="445px" height="20px">
             <text x="10" y="15">Small (&lt; 10m)</text>
-            <circle class="asteroid small" cx="170" cy="10" r="1"></circle>
-            <circle class="asteroid small" cx="200" cy="10" r="2"></circle>
-            <circle class="asteroid big" cx="230" cy="10" r="2"></circle>
-            <circle class="asteroid big" cx="260" cy="10" r="3"></circle>
-            <circle class="asteroid huge" cx="290" cy="10" r="3"></circle>
-            <circle class="asteroid huge" cx="320" cy="10" r="4"></circle>
-            <text x="340" y="15">Large (&gt; 300m)</text>
+            <circle class="asteroid small" cx="150" cy="10" r="1"></circle>
+            <circle class="asteroid small" cx="180" cy="10" r="2"></circle>
+            <circle class="asteroid big" cx="210" cy="10" r="2"></circle>
+            <circle class="asteroid big" cx="240" cy="10" r="3"></circle>
+            <circle class="asteroid huge" cx="270" cy="10" r="3"></circle>
+            <circle class="asteroid huge" cx="300" cy="10" r="4"></circle>
+            <text x="320" y="15">Large (&gt; 300m)</text>
           </svg>
         </div>
       </div>
@@ -81,6 +84,7 @@
   </div>
   <iframe class="widget" src="http://www.jpl.nasa.gov/asteroidwatch/widget/"></iframe>
   <script src="node_modules/d3/d3.js"></script>
+  <script src="node_modules/keyboard.js"></script>
   <script src="node_modules/moment/moment.js"></script>
   <script src="js/asteroids.js"></script>
   <script src="//use.typekit.net/bvj7kmh.js"></script>

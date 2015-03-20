@@ -5,7 +5,10 @@
 body {
   background-color: #1A1A1A; //from nyt kepler
   overflow: hidden;
+  height: 100%;
   color: #FFF;
+  -webkit-transition:color 0.2s, background-color 0.2s, fill 0.2s, -webkit-transform 0.2s;
+  transition:color 0.2s, background-color 0.2s, fill 0.2s;
 }
 
 .onlight,
@@ -132,7 +135,7 @@ circle.earth {
 
 #sky {
   border: 1px dotted #AAA;
-  height: 70%;
+  /*height: 70%;*/
   width: 100%;
   /*margin-top: 50px;*/
   bottom: 0;
@@ -173,9 +176,14 @@ text.ruler-label {
   text-align: center;
 }
 
-.metadata {
+.description {
+  text-align: justify;
+}
+
+#metadata {
   padding: 0 20px;
-  min-height: 200px;
+  font-size: 0.85em;
+  max-height: 200px;
 }
 
 .right {
@@ -241,10 +249,11 @@ text.ruler-label {
   width: 400px;
   top: 200px;
   height: 500px;
-  visibility: hidden;
+  display: none;
 }
 
 .show-widget .widget {
+  display: block;
   visibility: visible;
 }
 
@@ -263,7 +272,7 @@ text.ruler-label {
 
 #ticks {
   position: relative;
-  margin-top: 40px;
+  margin-top: 25px;
   width: 100%;
   height: 30px;
   border: 1px dotted #AAA;
