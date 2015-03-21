@@ -95,12 +95,18 @@ circle.earth {
   font-size: 10px;
 }
 
+/* !important needed since hover hides/shows rings as well, needs to be overriden 
+   in case of rings being shown and hover at same time */
 .show-rings-big .asteroid-rings-big, .show-rings-big .asteroid-rings-huge {
   display: block !important;
 }
 
 .show-rings-huge .asteroid-rings-huge {
   display: block !important;
+}
+
+.show-rings-new .asteroid-rings-new {
+  /*display: block !important;*/
 }
 
 .show-rings-big .asteroid:not(.huge), .show-rings-huge .asteroid:not(.huge) {
@@ -115,6 +121,12 @@ circle.earth {
 .big {
   fill: #CCC;
   stroke: #BBB;
+}
+
+.show-rings-new .new {
+  fill: #0026FF;
+  color: #0026FF;
+  stroke: #0026FF;
 }
 
 .small {

@@ -17,7 +17,7 @@
     offsetBottom = 40;
 
     LUNAR_DISTANCE = 384400; //km
-    MAX_LDS = 10;
+    MAX_LDS = 15;
 
     lunar_distance_scale = d3.scale.linear()
       .domain([0, MAX_LDS * LUNAR_DISTANCE])
@@ -81,17 +81,22 @@ Vrelative(km/s): "7.02"
           .append("ellipse")
           .attr("class", function(d) {
             d.el = this;
+            var className = '';
             if ( d.h < 21 ) {
-              return "asteroid huge";
+              className += " huge";
             }
-            if ( d.h < 24.5 ) {
-              return "asteroid big";
+            else if ( d.h < 24.5 ) {
+              className += " big";
             }
-            if ( d.h > 28 ) {
-              return "asteroid small";
+            else if ( d.h > 28 ) {
+              className += " small";
             }
 
-            return "asteroid";
+            if (new RegExp('\(' + d.closeApproach._d.getFullYear() + '.*\)').test(d.name)) {
+              className += " new";
+            }
+
+            return className += " asteroid";
           })
           .attr("ry", function(d) {
             return size_scale(d.h);
@@ -140,13 +145,20 @@ Vrelative(km/s): "7.02"
           .append("circle")
           .attr("class", function(d) {
             d.ringEl = this;
+            var className = 'asteroid-rings';
             if ( d.h < 21 ) {
-              return "asteroid-rings-huge asteroid-rings"
+               className += " asteroid-rings-huge";
             }
-            if ( d.h <= 24.5 ) {
-              return "asteroid-rings-big asteroid-rings";
+            else if ( d.h <= 24.5 ) {
+              className += " asteroid-rings-big";
             }
-            return "asteroid-rings";
+
+            if (new RegExp('\(' + d.closeApproach._d.getFullYear() + '.*\)').test(d.name)) {
+              className += " asteroid-rings-new";
+            }
+
+
+            return className;
           })
           .attr("r", 40)
           .attr("cx", function(d) {
@@ -169,10 +181,13 @@ Vrelative(km/s): "7.02"
     });
     document.querySelector('input[name=show-onlight]').addEventListener('change', function(e) {
       document.body.classList.toggle('onlight');
-    })
+    });
     document.querySelector('input[name=show-widget]').addEventListener('change', function(e) {
       document.body.classList.toggle('show-widget');
-    })
+    });
+    document.querySelector('input[name=show-new]').addEventListener('change', function(e) {
+      document.body.classList.toggle('show-rings-new');
+    });
   }
 
   function drawEarthAndMoon() {
@@ -269,7 +284,7 @@ Vrelative(km/s): "7.02"
           .attr("class", "ruler")
           .attr("x1", function(d) {
             if ( d % 5 === 0 || d === 1 ) {
-              return width / 2 - 20.5;
+              return width / 2 - 65.5;
             }
 
             return width / 2 - 10;
@@ -279,7 +294,7 @@ Vrelative(km/s): "7.02"
           })
           .attr("x2", function(d) {
             if ( d % 5 === 0 || d === 1) {
-              return width / 2 + 20.5;
+              return width / 2 + 65.5;
             }
 
             return width / 2 + 10;
@@ -303,7 +318,7 @@ Vrelative(km/s): "7.02"
             return d + " LDs";
           })
           .attr("class", "ruler-label")
-          .attr("x", width / 2 - 45)
+          .attr("x", width / 2 - 100)
           .attr("y", function(d) {
             return lunar_distance_scale(LUNAR_DISTANCE * d) + 3;
           });
