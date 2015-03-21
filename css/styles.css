@@ -37,6 +37,12 @@ body {
   stroke: darkred;
 }
 
+.onlight.show-rings-new .new {
+  fill: #FF7200;
+  stroke: #FF7200;
+  color: #FF7200;
+}
+
 .x.axis {
   fill: #AAA;
   font-size: 10px;
