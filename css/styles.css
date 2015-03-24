@@ -201,13 +201,12 @@ text.ruler-label {
 #metadata {
   padding: 0 20px;
   font-size: 0.85em;
-  max-height: 200px;
 }
 
 /* Larger than tablet */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)  {
   #metadata {
-    font-size: 0.75em;
+    font-size: 0.85em;
   }
 
   .ticks {
@@ -224,6 +223,29 @@ text.ruler-label {
   }
 
 }
+
+@media (min-width: 550px) and (max-device-width : 1024px)  {
+  h2 {
+    font-size: 3.5rem;
+  }
+  .legend {
+    transform: scaleX(0.7)scaleY(0.8);
+    margin-left: -60px;
+  }
+  .center {
+    width: 60% !important;
+  }
+  .key {
+    position: absolute;
+    top: 160px;
+    /*text-align: left !important;*/
+    right: 20px;
+  }
+  #viz {
+    min-height: 500px;
+  }
+}
+
 
 
 .right {
@@ -308,6 +330,10 @@ text.ruler-label {
 
   #sky {
     display: block;
+  }
+
+  body {
+    line-height: 1em;
   }
 }
 
