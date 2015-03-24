@@ -410,7 +410,7 @@ Vrelative(km/s): "7.02"
         approachPrefix = 'Approaches Earth on ';
         distancePrefix = 'It will come within ';
       }
-      popover.select("#approach").text(approachPrefix + ' ' + d.closeApproach.format('MMMM Do') + '.')
+      popover.select("#approach").text(approachPrefix + ' ' + d.closeApproach.format('MMMM Do YYYY') + '.')
       popover.select("#minimum").html(distancePrefix + '<strong>' + d.ldMinimum + ' LDs</strong>, and it\'s')
       popover.select("#size").text(hmag_scale(d.h).toFixed(1) + ' meters.');
       popover.select("#h").text(d.h);

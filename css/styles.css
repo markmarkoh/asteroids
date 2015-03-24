@@ -215,9 +215,14 @@ text.ruler-label {
   }
 
   .legend {
-    transform: scale(0.75);
-    margin-left: -50px;
+    transform: scale(0.68);
+    margin-left: -20px;
   }
+
+  .controls, .controls em {
+    font-size: 0.88em;
+  }
+
 }
 
 
@@ -265,7 +270,7 @@ text.ruler-label {
 .popover {
   /*background-color: rgba(10,10,10,1);*/
   height: 105px;
-  width: 220px;
+  width: 250px;
   position: absolute;
   pointer-events: none;
   font-size: 12px;
