@@ -63,8 +63,8 @@ html, body {
 }
 
 circle.earth {
-  fill: blue;
-  stroke: green;
+  fill: #4118DC;
+  stroke: #00D100;
   stroke-width: 2px;
 }
 
@@ -98,7 +98,7 @@ circle.earth {
 }
 
 .controls em {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 /* !important needed since hover hides/shows rings as well, needs to be overriden 
@@ -120,8 +120,8 @@ circle.earth {
 }
 
 .huge {
-  fill: red;
-  stroke: red;
+  fill: #AD2929;
+  stroke: #AD2929;
 }
 
 .big {
@@ -130,9 +130,9 @@ circle.earth {
 }
 
 .show-rings-new .new {
-  fill: #0026FF;
-  color: #0026FF;
-  stroke: #0026FF;
+  fill: #79A226;
+  color: #79A226;
+  stroke: #79A226;
 }
 
 .small {
@@ -234,6 +234,7 @@ text.ruler-label {
 .links {
   position: absolute;
   bottom: 5px;
+  right: 10px;
   left: 0;
 }
 
@@ -241,16 +242,29 @@ text.ruler-label {
   list-style-type: none;
 }
 .links ul li {
-  float: left;
+  float: right;
   margin-left: 20px;
+  font-size: 11px;
+}
+
+.links .control input {
+  display: none;
+}
+
+.links .right {
+  float: right;
+}
+
+.links .help {
+  font-size: 11px;
 }
 .sources {
   z-index: 1010101;
 }
 
 .popover {
-  background-color: rgba(10,10,10,1);
-  height: 120px;
+  /*background-color: rgba(10,10,10,1);*/
+  height: 105px;
   width: 220px;
   position: absolute;
   pointer-events: none;
@@ -258,11 +272,20 @@ text.ruler-label {
   z-index:101011101;
   padding: 0 4px;
   display: none;
+  background-color: white;
+  color: #111;
+  box-shadow: #333 1px 1px 7px;
+  border-radius: 2px;
 }
 
-.onlight .popover {
-  background-color: white;
-  box-shadow: #333 1px 1px 7px;
+.popover strong {
+  font-size: 1.1em;
+}
+
+.popover .name {
+  padding: 4px 2px;
+  border-bottom: 1px dashed #999;
+  margin-bottom: 5px;
 }
 
 .warning {

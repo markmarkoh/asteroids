@@ -16,12 +16,14 @@ Many NEOs aren't discovered until they've nearly passed us in their orbit, which
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="shortcut icon" href="favicon.ico">
   <link rel="apple-touch-icon-precomposed" href="favicon.ico">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+
   <title>Asteroids</title>
 </head>
-<body class="tk-source-code-pro">
+<body>
   <div id="metadata">
     <div class="row center">
-      <h2>Asteroid Tracker</h2>
+      <h2>Asteroids: Near Earth Approaches</h2>
     </div>
     <div class="row">
       <div class="four columns">
@@ -41,33 +43,20 @@ Many NEOs aren't discovered until they've nearly passed us in their orbit, which
           <li>
             <label class="new" title="As determined by the year of it being discovered being the same year as it's close approach date">
               <input type="checkbox" name="show-new"/>
-               Highlight asteroids we didn't know about until they passed Earth
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" name="show-widget"/>
-              Show NASA's Asteroid Watch Widget
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="checkbox" name="show-onlight"/>
-              View on light background
+               Highlight asteroids we didn't find until they neared Earth
             </label>
           </li>
         </ul>
       </div>
       <div class="four columns center">
-        <div class="description">A visualization of known and tracked <a href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=date&sdir=ASC&tlim=far_future&dmax=10LD&max_rows=500&action=Display+Table&show=1" target="_blank">Near Earth Objects, or NEOs</a>, as tracked by <a target="_blank" href="http://neo.jpl.nasa.gov/index.html">NASA's JPL NEO program.</a><br/>
-          Many NEOs aren't discovered until they've nearly passed us in their orbit, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.
+        <div class="description">A visualization of known and tracked <a href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=date&sdir=ASC&tlim=far_future&dmax=10LD&max_rows=500&action=Display+Table&show=1" target="_blank">Near Earth Asteroids, or NEAs</a> that will make a close approach to Earth within the next 12 months, or have made a close approach within the last 12 months, as tracked by <a target="_blank" href="http://neo.jpl.nasa.gov/index.html">NASA's JPL NEO program.</a><br/>
+          Many NEAs aren't discovered until they've nearly passed us in their orbit, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.
         </div>
       </div>
-      <div class="four columns right">
+      <div class="four columns right tk-source-code-pro">
           <div>1 Lunar Distance = 384,400km</div>
-          <div>Lunar Diameter = 3,475km</div>
-          <div>Earth Diameter = 12,742km</div>
-          <div>Objects englarged for visibility</div>
+          <div>Moon Diameter = 3,475km</div>
+          <!-- <div>Earth Diameter = 12,742km</div> -->
           <div>
           <svg class="legend" width="400px" height="20px">
             <text x="5" y="15">Small (&lt; 10m)</text>
@@ -84,30 +73,39 @@ Many NEOs aren't discovered until they've nearly passed us in their orbit, which
     </div>
   </div>
   <div id="ticks"></div>
-  <div id="viz">
+  <div class="tk-source-code-pro" id="viz">
     <svg id="sky"></svg>
   </div>
   <div class="links">
     <ul>
+      <li class="help">
+          <div>Asteroids englarged for visibility</div>
+      </li>
+      <li class="control">
+        <label>
+          <input type="checkbox" name="show-onlight"/>
+          View on light background
+        </label>
+      </li>
       <li>
         <a target="_blank" href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=dist&sdir=ASC&tlim=far_future&dmax=0.05AU&max_rows=500&fmt=full&action=Display+Table&show=1" class="sources">NEO Data Sources</a>
       </li>
-      <li>
+<!--       <li>
         <a target="_blank" href="http://neo.jpl.nasa.gov/index.html">More NEO information</a>
-      </li>
+      </li> -->
       <li>
         <a target="_blank" href="https://github.com/markmarkoh/asteroids" class="git sources">Project Source Code</a>
       </li>
   </div>
   <div id="popover" class="popover">
-    <div>Approach date: <span id="approach"></span></div>
-    <div>Name: <span id="name"></span></div>
-    <div>Nominal distance: <span id="nominal"></span></div>
-    <div>Minimum distance: <span id="minimum"></span></div>
-    <div>H (abs. magnitude): <span id="h"></span></div>
-    <div>Est. size: <span id="size"></span></div>
+    <div class="name"><strong id="name"></strong></div>
+    <div><span id="approach"></span></div>
+    <div><span id="minimum"></span></div>
+<!--     <div>H (abs. magnitude): <span id="h"></span></div>
+ -->    
+    <div>estimated size is <strong id="size"></strong></div>
   </div>
-  <iframe class="widget" src="http://www.jpl.nasa.gov/asteroidwatch/widget/"></iframe>
+  <iframe class="widget" data-src="http://www.jpl.nasa.gov/asteroidwatch/widget/"></iframe>
   <script src="node_modules/d3/d3.js"></script>
   <script src="node_modules/keyboard.js"></script>
   <script src="node_modules/moment/moment.js"></script>

@@ -25,7 +25,7 @@
 
     var date = new Date();
     time_scale = d3.time.scale()
-      .domain([ d3.time.year.offset(date, -1), d3.time.year.offset(date, 1)])
+      .domain([d3.time.year.offset(date, 1),  d3.time.year.offset(date, -1)])
       .rangeRound([width, 0]);
 
     size_scale = d3.scale.log()
@@ -160,7 +160,7 @@ Vrelative(km/s): "7.02"
 
             return className;
           })
-          .attr("r", 40)
+          .attr("r", 30)
           .attr("cx", function(d) {
             return time_scale(d.closeApproach._d)
           })
@@ -182,9 +182,6 @@ Vrelative(km/s): "7.02"
     document.querySelector('input[name=show-onlight]').addEventListener('change', function(e) {
       document.body.classList.toggle('onlight');
     });
-    document.querySelector('input[name=show-widget]').addEventListener('change', function(e) {
-      document.body.classList.toggle('show-widget');
-    });
     document.querySelector('input[name=show-new]').addEventListener('change', function(e) {
       document.body.classList.toggle('show-rings-new');
     });
@@ -195,31 +192,31 @@ Vrelative(km/s): "7.02"
 
     var earth = earthAndMoon.append("circle")
       .attr("class", "earth")
-      .attr("r", 10)
+      .attr("r", 12)
       .attr("cx", width / 2)
       .attr("cy", 0)
 
     var earthLabel = earthAndMoon.append("text")
       .attr("class", "ruler-label")
       .text("Earth")
-      .attr("x", width / 2 - 90)
+      .attr("x", width / 2 + 90)
       .attr("y", 40)
 
-    drawLabelLine(earthAndMoon, earthLabel.node(), earth.node());
+    drawLabelLine(earthAndMoon, earthLabel.node(), earth.node(), true);
 
     var moon = earthAndMoon.append("circle")
       .attr("class", "moon")
-      .attr("r", 3)
+      .attr("r", 3.5)
       .attr("cx", width / 2)
       .attr("cy", lunar_distance_scale(LUNAR_DISTANCE))   
 
     var moonLabel = earthAndMoon.append("text")
       .attr("class", "ruler-label")
       .text("Moon")
-      .attr("x", width / 2 - 83)
+      .attr("x", width / 2 + 83)
       .attr("y", lunar_distance_scale(LUNAR_DISTANCE) + 35)
 
-    drawLabelLine(earthAndMoon, moonLabel.node(), moon.node());
+    drawLabelLine(earthAndMoon, moonLabel.node(), moon.node(), true);
 
     earthAndMoon.append("circle")
       .attr("class", "moon-orbit")
@@ -259,16 +256,23 @@ Vrelative(km/s): "7.02"
 
   }
 
-  function drawLabelLine(container, elStart, elEnd) {
+  function drawLabelLine(container, elStart, elEnd, onRightSide) {
     container.append("path")
       .attr("class", "label-line")
       .attr("d", function() {
+        var multiplyer = 1;
+        if ( onRightSide === true ) {
+          multiplyer = -1;
+        }
         var elStartBox = elStart.getBBox();
         var elEndBox = elEnd.getBBox();
-        var step1 = "M" + (elStartBox.x + elStartBox.width + 3) + "," + (elStartBox.y + (elStartBox.height / 2));
-        var step2 = "L" + (elStartBox.x + elStartBox.width + 25) + "," + (elStartBox.y + (elStartBox.height / 2));
-        var step3 = "L" + (elEndBox.x + (elEndBox.width / 2) - 3) + "," + (elEndBox.y + elEndBox.height + 3);
-        return [step1, step2, step3].join("");
+        var step1 = (elStartBox.x + (multiplyer * (elStartBox.width + 3))) + "," + (elStartBox.y + (elStartBox.height / 2));
+        var step2 = (elStartBox.x + (multiplyer * elStartBox.width + 25)) + "," + (elStartBox.y + (elStartBox.height / 2));
+        var step3 = (elEndBox.x + (elEndBox.width / 2) - 3) + "," + (elEndBox.y + elEndBox.height + 3);
+        if ( onRightSide === true ) {
+          return ["M", step2, "L", step1, "L", step3].join("");
+        }
+        return ["M", step1, "L", step2, "L", step3].join("");
       });
   }
 
@@ -307,7 +311,6 @@ Vrelative(km/s): "7.02"
       .data(range.filter(function(d) { return d % 5 === 0 || d === 1}))
       .enter()
         .append("text")
-          .attr("text-anchor", "end")
           .text(function(d) {
             if ( d === 1 ) {
               return d + " Lunar Distance (LD)"; //, or about " + LUNAR_DISTANCE.toLocaleString() + "km from Earth";
@@ -318,7 +321,7 @@ Vrelative(km/s): "7.02"
             return d + " LDs";
           })
           .attr("class", "ruler-label")
-          .attr("x", width / 2 - 100)
+          .attr("x", width / 2 + 85)
           .attr("y", function(d) {
             return lunar_distance_scale(LUNAR_DISTANCE * d) + 3;
           });
@@ -399,11 +402,17 @@ Vrelative(km/s): "7.02"
       return d && d.point;
      })
     .on("mouseenter", function(d) {
-      popover.select("#name").text(d.name);
-      popover.select("#approach").text(d.closeApproach.fromNow())
-      popover.select("#minimum").text(d.ldMinimum + ' LDs')
-      popover.select("#nominal").text(d.ldNominal + ' LDs')
-      popover.select("#size").text(hmag_scale(d.h).toFixed(2) + ' meters');
+      popover.select("#name").text('Asteroid ' + d.name);
+
+      var approachPrefix = 'Passed Earth on ';
+      var distancePrefix = 'It came within ';
+      if (d.closeApproach._d > new Date()) {
+        approachPrefix = 'Approaches Earth on ';
+        distancePrefix = 'It will come within ';
+      }
+      popover.select("#approach").text(approachPrefix + ' ' + d.closeApproach.format('MMMM Do') + '.')
+      popover.select("#minimum").html(distancePrefix + '<strong>' + d.ldMinimum + ' LDs</strong>, and it\'s')
+      popover.select("#size").text(hmag_scale(d.h).toFixed(1) + ' meters.');
       popover.select("#h").text(d.h);
       var popEl = popover[0][0];
       popEl.style.top = d.el.getBBox().y + 100 + 'px';
