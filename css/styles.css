@@ -290,14 +290,11 @@ text.ruler-label {
 }
 
 .popover {
-  /*background-color: rgba(10,10,10,1);*/
-  height: 105px;
-  width: 250px;
   position: absolute;
   pointer-events: none;
   font-size: 12px;
   z-index:101011101;
-  padding: 0 4px;
+  padding: 10px;
   display: none;
   background-color: white;
   color: #111;
