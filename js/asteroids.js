@@ -57,7 +57,7 @@ Vinfinity(km/s): "6.98"
 Vrelative(km/s): "7.02"
 */
   function drawNeos() {
-    d3.csv("data/future.csv")
+    d3.csv("data/all.csv")
     .row(function(d) {
       if ( d["Object"] === "") return;
       return {
