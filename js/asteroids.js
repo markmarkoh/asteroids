@@ -188,6 +188,7 @@ Vrelative(km/s): "7.02"
 
     if (getParameterByName('show-huge-rocks') == 'true') {
       document.body.classList.add('show-rings-huge')
+      document.querySelector('input[name=show-huge]').checked = true
     }
   }
 
