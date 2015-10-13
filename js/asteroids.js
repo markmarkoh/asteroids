@@ -130,7 +130,7 @@ Vrelative(km/s): "7.02"
             }
           })
           .attr('x', function(d) {
-            return time_scale(d.closeApproach._d) - 110; 
+            return time_scale(d.closeApproach._d) - 110;
           })
           .attr('y', function(d) {
             return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) + 20;
@@ -185,6 +185,10 @@ Vrelative(km/s): "7.02"
     document.querySelector('input[name=show-new]').addEventListener('change', function(e) {
       document.body.classList.toggle('show-rings-new');
     });
+
+    if (getParameterByName('show-huge-rocks') == 'true') {
+      document.body.classList.add('show-rings-huge')
+    }
   }
 
   function drawEarthAndMoon() {
@@ -208,7 +212,7 @@ Vrelative(km/s): "7.02"
       .attr("class", "moon")
       .attr("r", 3.5)
       .attr("cx", width / 2)
-      .attr("cy", lunar_distance_scale(LUNAR_DISTANCE))   
+      .attr("cy", lunar_distance_scale(LUNAR_DISTANCE))
 
     var moonLabel = earthAndMoon.append("text")
       .attr("class", "ruler-label")
@@ -222,7 +226,7 @@ Vrelative(km/s): "7.02"
       .attr("class", "moon-orbit")
       .attr("r", lunar_distance_scale(LUNAR_DISTANCE))
       .attr("cx", width / 2)
-      .attr("cy", 0);  
+      .attr("cy", 0);
   }
 
   function drawGuideLines(classname, months) {
@@ -333,7 +337,7 @@ Vrelative(km/s): "7.02"
     var date = new Date();
 
     d3.select('#ticks')
-      .selectAll('ticks')    
+      .selectAll('ticks')
       .data(data)
       .enter()
         .append("div")
@@ -392,13 +396,13 @@ Vrelative(km/s): "7.02"
     voronoiGroup.selectAll("path")
       .data(voronoi(data))
     .enter().append("path")
-      .attr("d", function(d) { 
+      .attr("d", function(d) {
         if ( !d || d.length < 2) {
          return null;
         }
         return "M" + d.join("L") + "Z";
      })
-    .datum(function(d) { 
+    .datum(function(d) {
       return d && d.point;
      })
     .on("mouseenter", function(d) {
@@ -452,6 +456,13 @@ Vrelative(km/s): "7.02"
   // });
   //important stuff
   new K('http://www.freeasteroids.org/');
- 
+
 
 })(window)
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
