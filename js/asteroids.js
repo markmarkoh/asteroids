@@ -5,6 +5,7 @@
   var lunar_distance_scale, time_scale, size_scale, hmag_scale;
   var LUNAR_DISTANCE, MAX_LDS;
   var offsetTop, offsetBottom;
+  var ldParam = parseInt(getParameterByName('lds'), 10)
   function draw() {
     sky = d3.select("#sky");
     var header_height = document.getElementById("metadata").offsetHeight + document.getElementById("ticks").offsetHeight;
@@ -17,7 +18,8 @@
     offsetBottom = 40;
 
     LUNAR_DISTANCE = 384400; //km
-    MAX_LDS = 15;
+
+    MAX_LDS = isNaN(ldParam) ? 15 : ldParam;
 
     lunar_distance_scale = d3.scale.linear()
       .domain([0, MAX_LDS * LUNAR_DISTANCE])
