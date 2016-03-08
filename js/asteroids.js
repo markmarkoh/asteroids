@@ -107,14 +107,14 @@ Vrelative(km/s): "7.02"
             return size_scale(d.h) - (Math.random() *.3);
           })
           .attr("cy", function(d) {
-            return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)
+            return lunar_distance_scale(d.ldMinimum * LUNAR_DISTANCE)
           })
           .attr("cx", function(d) {
             return time_scale(d.closeApproach._d);
           })
           .attr("transform", function(d) {
             if ( Math.random() * 2 > 1)
-            return "rotate(34, " + [time_scale(d.closeApproach._d), lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)].join(",") + ")";
+            return "rotate(34, " + [time_scale(d.closeApproach._d), lunar_distance_scale(d.ldMinimum * LUNAR_DISTANCE)].join(",") + ")";
           });
 
       var bigOnes = rows.filter(function(val) { return val.h < 21 });
@@ -135,7 +135,7 @@ Vrelative(km/s): "7.02"
             return time_scale(d.closeApproach._d) - 110;
           })
           .attr('y', function(d) {
-            return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) + 20;
+            return lunar_distance_scale(d.ldMinimum * LUNAR_DISTANCE) + 20;
           })
           .attr('foo', function(d) {
             drawLabelLine(asteroids, d3.select(this).node(), d3.select(d.el).node())
@@ -167,7 +167,7 @@ Vrelative(km/s): "7.02"
             return time_scale(d.closeApproach._d)
           })
           .attr("cy", function(d) {
-            return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)
+            return lunar_distance_scale(d.ldMinimum * LUNAR_DISTANCE)
           });
 
       drawVoronoi(rows);
@@ -418,7 +418,7 @@ Vrelative(km/s): "7.02"
         distancePrefix = 'It will come within ';
       }
       popover.select("#approach").text(approachPrefix + ' ' + d.closeApproach.format('MMMM Do YYYY') + '.')
-      popover.select("#minimum").html(distancePrefix + '<strong>' + d.ldNominal + ' LDs</strong>, and its')
+      popover.select("#minimum").html(distancePrefix + '<strong>' + d.ldMinimum + ' LDs</strong>, and its')
       popover.select("#size").text(hmag_scale(d.h).toFixed(1) + ' meters.');
       popover.select("#h").text(d.h);
       var popEl = popover[0][0];
