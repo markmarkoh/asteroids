@@ -2,6 +2,7 @@
 
     //drawGuideLines("guide-light", [0.42, 0.58]);
   var sky, height, width;
+  var failedDownloadInitialFile = false;
   var lunar_distance_scale, time_scale, size_scale, hmag_scale;
   var LUNAR_DISTANCE, MAX_LDS;
   var offsetTop, offsetBottom;
@@ -43,7 +44,7 @@
     drawRulers();
     drawTimeAxis();
     drawEarthAndMoon();
-    drawNeos();
+    drawNeos('https://query.data.world/s/3mnhh52x3pd48roa0p0mj4lwc');
     setupControls();
   }
 
@@ -58,8 +59,10 @@ Object: "(2015 FK)"
 Vinfinity(km/s): "6.98"
 Vrelative(km/s): "7.02"
 */
-  function drawNeos() {
-    d3.csv("data/all.csv")
+
+// git@github.com:markmarkoh/asteroids.git
+  function drawNeos(url) {
+    d3.csv(url)
     .row(function(d) {
       if ( d["Object"] === "") return;
       return {
@@ -71,7 +74,10 @@ Vrelative(km/s): "7.02"
       }
     })
     .get(function(errors, rows) {
-
+      if (errors && !failedDownloadInitialFile) {
+        drawNeos('data/all.csv')
+        failedDownloadInitialFile = true
+      }
       rows = rows.filter(function(row) {
         return row.ldNominal <= MAX_LDS + 0.5;
       });
