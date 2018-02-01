@@ -44,7 +44,7 @@
     drawRulers();
     drawTimeAxis();
     drawEarthAndMoon();
-    drawNeos('https://query.data.world/s/3mnhh52x3pd48roa0p0mj4lwc');
+    drawNeos('https://query.data.world/s/7tmju3kaa04lek25pt2h1gpi3');
     setupControls();
   }
 
