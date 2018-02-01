@@ -62,7 +62,9 @@ Vrelative(km/s): "7.02"
 
 // git@github.com:markmarkoh/asteroids.git
   function drawNeos(url) {
-    fetch('https://ssd-api.jpl.nasa.gov/cad.api?www=1&nea-comet=Y&dist-max=16LD&fullname=true&date-min=2017-02-01&date-max=2019-02-01&h-max=27')
+    const max = moment().add(1, 'y').format('YYYY-MM-DD')
+    const min = moment().subtract(1, 'y').format('YYYY-MM-DD')
+    fetch('https://ssd-api.jpl.nasa.gov/cad.api?www=1&nea-comet=Y&dist-max=16LD&fullname=true&date-min=' + min + '&date-max=' + max + '&h-max=27')
       .then(function (s) {
         return s.json()
       })
