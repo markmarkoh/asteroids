@@ -62,22 +62,28 @@ Vrelative(km/s): "7.02"
 
 // git@github.com:markmarkoh/asteroids.git
   function drawNeos(url) {
-    d3.csv(url)
-    .row(function(d) {
-      if ( d["Object"] === "") return;
-      return {
-        ldMinimum: +(d["CA DistanceMinimum(LD/AU)"].split("/")[0]),
-        ldNominal: +(d["CA DistanceNominal(LD/AU)"].split("/")[0]),
-        closeApproach: moment(d["Close-Approach (CA) Date (TDB)YYYY-mmm-DD HH:MM ± D_HH:MM"].split("±")[0].trim(), "YYYY-MMMM-DD HH:mm"),
-        h: +d["H(mag)"],
-        name: d["Object"]
-      }
-    })
-    .get(function(errors, rows) {
-      if (errors && !failedDownloadInitialFile) {
-        drawNeos('data/all.csv')
-        failedDownloadInitialFile = true
-      }
+    fetch('https://ssd-api.jpl.nasa.gov/cad.api?www=1&nea-comet=Y&dist-max=16LD&fullname=true&date-min=2017-02-01&date-max=2019-02-01&h-max=27')
+      .then(function (s) {
+        return s.json()
+      })
+      .then(function(r) {
+        const data = r.data.map(function(asteroid) {
+          return _.zipObject(r.fields, asteroid)
+        })
+
+        const AU_TO_LD = 389.577688525899
+
+        return Promise.resolve(data.map(function(asteroid) {
+          return {
+            ldMinimum: asteroid.dist_min * AU_TO_LD,
+            ldNominal: asteroid.dist * AU_TO_LD,
+            closeApproach: moment(asteroid.cd, "YYYY-MMM-DD HH:mm"),
+            h: asteroid.h,
+            name: asteroid.fullname.trim()
+          }
+        }))
+      })
+    .then(function(rows, errors) {
       rows = rows.filter(function(row) {
         return row.ldNominal <= MAX_LDS + 0.5;
       });
