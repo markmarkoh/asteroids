@@ -1,6 +1,5 @@
 (function(root) {
 
-    //drawGuideLines("guide-light", [0.42, 0.58]);
   var sky, height, width;
   var failedDownloadInitialFile = false;
   var lunar_distance_scale, time_scale, size_scale, hmag_scale;
@@ -22,7 +21,7 @@
 
     MAX_LDS = isNaN(ldParam) ? 15 : ldParam;
 
-    lunar_distance_scale = d3.scale.linear()
+    lunar_distance_scale = d3.scaleLinear()
       .domain([0, MAX_LDS * LUNAR_DISTANCE])
       .range([10, height - 50]);
 
@@ -31,11 +30,11 @@
       .domain([d3.time.year.offset(date, 1),  d3.time.year.offset(date, -1)])
       .rangeRound([width, 0]);
 
-    size_scale = d3.scale.log()
+    size_scale = d3.scaleLog()
       .domain([30, 17])
       .range([0.5, 4]);
 
-    hmag_scale = d3.scale.linear()
+    hmag_scale = d3.scaleLinear()
     .domain([30, 29,  28,   27,   26, 25,  24, 23, 22,   21,  20,  19, 18])
     .range([4.5, 6.5, 11.5, 17.5, 27, 42.5, 65, 90, 170,  210, 330, 670, 1000]);
 
@@ -432,7 +431,7 @@ Vrelative(km/s): "7.02"
         distancePrefix = 'It will come within ';
       }
       popover.select("#approach").text(approachPrefix + ' ' + d.closeApproach.format('MMMM Do YYYY') + '.')
-      popover.select("#minimum").html(distancePrefix + '<strong>' + d.ldNominal + ' LDs</strong>, and its')
+      popover.select("#minimum").html(distancePrefix + '<strong>' + d.ldNominal.toFixed(1) + ' LDs</strong>, and its')
       popover.select("#size").text(hmag_scale(d.h).toFixed(1) + ' meters.');
       popover.select("#h").text(d.h);
       var popEl = popover[0][0];

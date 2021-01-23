@@ -339,6 +339,7 @@ text.ruler-label {
   z-index: 1010212;
   position: absolute;
   width: 400px;
+  font-size: 1.1rem;
   top: 200px;
   height: 500px;
   display: none;
