@@ -26,8 +26,8 @@
       .range([10, height - 50]);
 
     var date = new Date();
-    time_scale = d3.time.scale()
-      .domain([d3.time.year.offset(date, 1),  d3.time.year.offset(date, -1)])
+    time_scale = d3.scaleTime()
+      .domain([d3.timeYear.offset(date, 1),  d3.timeYear.offset(date, -1)])
       .rangeRound([width, 0]);
 
     size_scale = d3.scaleLog()
@@ -250,7 +250,7 @@ Vrelative(km/s): "7.02"
     var guides = sky.append("g");
 
     guides.selectAll("guide")
-      .data([time_scale(d3.time.month.offset(date, -1 * months)), time_scale(d3.time.month.offset(date, months))])
+      .data([time_scale(d3.timeMonth.offset(date, -1 * months)), time_scale(d3.timeMonth.offset(date, months))])
       .enter()
         .append("line")
           .attr("x1", function(d) {
@@ -267,10 +267,10 @@ Vrelative(km/s): "7.02"
     guides.append("text")
       .attr("class", "ruler-label ")
       .text(function() {
-        return 'Will pass ' + moment(d3.time.month.offset(data, months)).fromNow();
+        return 'Will pass ' + moment(d3.timeMonth.offset(data, months)).fromNow();
       })
       .attr("x", function() {
-        return time_scale(d3.time.month.offset(date, months))
+        return time_scale(d3.timeMonth.offset(date, months))
       })
       .attr("y", offsetTop - 10)
 
@@ -371,7 +371,7 @@ Vrelative(km/s): "7.02"
           var offset = 50;
           if ( d === 0 || d === d3.max(data) ) offset = 88;
 
-          return time_scale(d3.time.month.offset(date, d)) - offset + "px"
+          return time_scale(d3.timeMonth.offset(date, d)) - offset + "px"
         })
 
 
@@ -379,11 +379,11 @@ Vrelative(km/s): "7.02"
     var xAxis = d3.svg.axis()
         .scale(time_scale)
         .orient("top")
-        .ticks(d3.time.months, 3)
+        .ticks(d3.timeMonths, 3)
         .tickSize(10, 0)
         .tickPadding(5)
         .tickFormat(function(d) {
-          return d3.time.format("%b %Y")
+          return "hi" ; // d3.time.format("%b %Y")
         });
 
     sky.append("g")
@@ -400,17 +400,17 @@ Vrelative(km/s): "7.02"
 
     var popover = d3.select("#popover");
 
-    var voronoi = d3.geom.voronoi()
+    var voronoi = d3.voronoi()
       .x(function(d) {return time_scale(d.closeApproach._d) })
       .y(function(d) { return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) })
-      .clipExtent([[-1, -1], [width+1, height+1]]);
+      .extent([[-1, -1], [width+1, height+1]]);
 
 
     var voronoiGroup = sky.append("g")
       .attr("class", "voronoi");
 
     voronoiGroup.selectAll("path")
-      .data(voronoi(data))
+      .data(voronoi.polygons(data))
     .enter().append("path")
       .attr("d", function(d) {
         if ( !d || d.length < 2) {
@@ -418,36 +418,35 @@ Vrelative(km/s): "7.02"
         }
         return "M" + d.join("L") + "Z";
      })
-    .datum(function(d) {
+    /*.datum(function(d) {
       return d && d.point;
-     })
-    .on("mouseenter", function(d) {
-      popover.select("#name").text('Asteroid ' + d.name);
-
+     })*/
+    .on("mouseenter", function(evt, {data}) {
+      popover.select("#name").text('Asteroid ' + data.name);
       var approachPrefix = 'Passed Earth on ';
       var distancePrefix = 'It came within ';
-      if (d.closeApproach._d > new Date()) {
+      if (data.closeApproach._d > new Date()) {
         approachPrefix = 'Approaches Earth on ';
         distancePrefix = 'It will come within ';
       }
-      popover.select("#approach").text(approachPrefix + ' ' + d.closeApproach.format('MMMM Do YYYY') + '.')
-      popover.select("#minimum").html(distancePrefix + '<strong>' + d.ldNominal.toFixed(1) + ' LDs</strong>, and its')
-      popover.select("#size").text(hmag_scale(d.h).toFixed(1) + ' meters.');
-      popover.select("#h").text(d.h);
-      var popEl = popover[0][0];
-      popEl.style.top = d.el.getBBox().y + 100 + 'px';
+      popover.select("#approach").text(approachPrefix + ' ' + data.closeApproach.format('MMMM Do YYYY') + '.')
+      popover.select("#minimum").html(distancePrefix + '<strong>' + data.ldNominal.toFixed(1) + ' LDs</strong>, and its')
+      popover.select("#size").text(hmag_scale(data.h).toFixed(1) + ' meters.');
+      popover.select("#h").text(data.h);
+      var popEl = popover._groups[0][0]
+      popEl.style.top = data.el.getBBox().y + 100 + 'px';
 
-      if (d.el.cx.baseVal.value > width / 2 ) {
-        popEl.style.left = d.el.getBBox().x - 200 + 'px';
+      if (data.el.cx.baseVal.value > width / 2 ) {
+        popEl.style.left = data.el.getBBox().x - 200 + 'px';
       }
       else {
-        popEl.style.left = d.el.getBBox().x + 20 + 'px';
+        popEl.style.left = data.el.getBBox().x + 20 + 'px';
       }
       popEl.style.display = 'block';
-      d.ringEl.style.display = 'block';
+      data.ringEl.style.display = 'block';
     })
-    .on("mouseout", function(d) {
-      d.ringEl.style.display = 'none';
+    .on("mouseout", function(evt, {data}) {
+      data.ringEl.style.display = 'none';
     });
 
     d3.select('#metadata').on('mouseenter', function() {
