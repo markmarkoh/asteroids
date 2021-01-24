@@ -59,26 +59,37 @@ Vinfinity(km/s): "6.98"
 Vrelative(km/s): "7.02"
 */
 
-// git@github.com:markmarkoh/asteroids.git
   function drawNeos(url) {
-    const max = moment().add(1, 'y').format('YYYY-MM-DD')
-    const min = moment().subtract(1, 'y').format('YYYY-MM-DD')
-    fetch('https://ssd-api.jpl.nasa.gov/cad.api?www=1&nea-comet=Y&dist-max=16LD&fullname=true&date-min=' + min + '&date-max=' + max + '&h-max=27')
+    const max = new Date();
+    const min = new Date();
+    const fmt = d3.timeFormat('%Y-%m-%d')
+    max.setUTCFullYear( max.getUTCFullYear() + 1)
+    min.setUTCFullYear( min.getUTCFullYear() - 1)
+    fetch('https://ssd-api.jpl.nasa.gov/cad.api?www=1&nea-comet=Y&dist-max=16LD&fullname=true&date-min=' + fmt(min) + '&date-max=' + fmt(max) + '&h-max=27')
       .then(function (s) {
         return s.json()
       })
       .then(function(r) {
+        const zipObject = (props, values) => {
+          return props.reduce((prev, prop, i) => {
+            return Object.assign(prev, { [prop]: values[i] });
+          }, {});
+        }
+
         const data = r.data.map(function(asteroid) {
-          return _.zipObject(r.fields, asteroid)
+          return zipObject(r.fields, asteroid)
         })
 
         const AU_TO_LD = 389.577688525899
+
+//	"2020-Jan-25 07:23"
+        const dateParser = d3.timeParse('%Y-%b-%d %H:%M')
 
         return Promise.resolve(data.map(function(asteroid) {
           return {
             ldMinimum: asteroid.dist_min * AU_TO_LD,
             ldNominal: asteroid.dist * AU_TO_LD,
-            closeApproach: moment(asteroid.cd, "YYYY-MMM-DD HH:mm"),
+            closeApproach: dateParser(asteroid.cd),
             h: asteroid.h,
             name: asteroid.fullname.trim()
           }
@@ -107,7 +118,7 @@ Vrelative(km/s): "7.02"
               className += " small";
             }
 
-            if (new RegExp('\(' + d.closeApproach._d.getFullYear() + '.*\)').test(d.name)) {
+            if (new RegExp('\(' + d.closeApproach.getFullYear() + '.*\)').test(d.name)) {
               className += " new";
             }
 
@@ -123,11 +134,11 @@ Vrelative(km/s): "7.02"
             return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)
           })
           .attr("cx", function(d) {
-            return time_scale(d.closeApproach._d);
+            return time_scale(d.closeApproach);
           })
           .attr("transform", function(d) {
             if ( Math.random() * 2 > 1)
-            return "rotate(34, " + [time_scale(d.closeApproach._d), lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)].join(",") + ")";
+            return "rotate(34, " + [time_scale(d.closeApproach), lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)].join(",") + ")";
           });
 
       var bigOnes = rows.filter(function(val) { return val.h < 21 });
@@ -145,7 +156,7 @@ Vrelative(km/s): "7.02"
             }
           })
           .attr('x', function(d) {
-            return time_scale(d.closeApproach._d) - 110;
+            return time_scale(d.closeApproach) - 110;
           })
           .attr('y', function(d) {
             return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) + 20;
@@ -168,7 +179,7 @@ Vrelative(km/s): "7.02"
               className += " asteroid-rings-big";
             }
 
-            if (new RegExp('\(' + d.closeApproach._d.getFullYear() + '.*\)').test(d.name)) {
+            if (new RegExp('\(' + d.closeApproach.getFullYear() + '.*\)').test(d.name)) {
               className += " asteroid-rings-new";
             }
 
@@ -177,7 +188,7 @@ Vrelative(km/s): "7.02"
           })
           .attr("r", 30)
           .attr("cx", function(d) {
-            return time_scale(d.closeApproach._d)
+            return time_scale(d.closeApproach)
           })
           .attr("cy", function(d) {
             return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)
@@ -262,18 +273,6 @@ Vrelative(km/s): "7.02"
           })
           .attr("y2", height - offsetBottom)
           .attr("class", classname);
-
-    return;
-    guides.append("text")
-      .attr("class", "ruler-label ")
-      .text(function() {
-        return 'Will pass ' + moment(d3.timeMonth.offset(data, months)).fromNow();
-      })
-      .attr("x", function() {
-        return time_scale(d3.timeMonth.offset(date, months))
-      })
-      .attr("y", offsetTop - 10)
-
   }
 
   function drawLabelLine(container, elStart, elEnd, onRightSide) {
@@ -401,7 +400,7 @@ Vrelative(km/s): "7.02"
     var popover = d3.select("#popover");
 
     var voronoi = d3.voronoi()
-      .x(function(d) {return time_scale(d.closeApproach._d) })
+      .x(function(d) {return time_scale(d.closeApproach) })
       .y(function(d) { return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) })
       .extent([[-1, -1], [width+1, height+1]]);
 
@@ -425,11 +424,11 @@ Vrelative(km/s): "7.02"
       popover.select("#name").text('Asteroid ' + data.name);
       var approachPrefix = 'Passed Earth on ';
       var distancePrefix = 'It came within ';
-      if (data.closeApproach._d > new Date()) {
+      if (data.closeApproach > new Date()) {
         approachPrefix = 'Approaches Earth on ';
         distancePrefix = 'It will come within ';
       }
-      popover.select("#approach").text(approachPrefix + ' ' + data.closeApproach.format('MMMM Do YYYY') + '.')
+      popover.select("#approach").text(approachPrefix + ' ' + data.closeApproach.toLocaleDateString() + '.')
       popover.select("#minimum").html(distancePrefix + '<strong>' + data.ldNominal.toFixed(1) + ' LDs</strong>, and its')
       popover.select("#size").text(hmag_scale(data.h).toFixed(1) + ' meters.');
       popover.select("#h").text(data.h);
@@ -450,10 +449,10 @@ Vrelative(km/s): "7.02"
     });
 
     d3.select('#metadata').on('mouseenter', function() {
-      popover[0][0].style.display = 'none';
+      popover._groups[0][0].style.display = 'none';
     });
     d3.select('#sky').on('mouseenter', function() {
-      popover[0][0].style.display = 'block';
+      popover._groups[0][0].style.display = 'block';
     });
 
   }
