@@ -48,12 +48,7 @@
   }
 
   function drawNeos() {
-    const max = new Date();
-    const min = new Date();
-    const fmt = d3.timeFormat('%Y-%m-%d')
-    max.setUTCFullYear( max.getUTCFullYear() + 1)
-    min.setUTCFullYear( min.getUTCFullYear() - 1)
-    fetch(`https://ssd-api.jpl.nasa.gov/cad.api?www=1&nea-comet=Y&dist-max=${MAX_LDS + 1}LD&fullname=true&date-min=${fmt(min)}&date-max=${fmt(max)}&h-max=27`)
+    fetch('http://d33bz6js14grvw.cloudfront.net/asteroids-data-15-lds4.json')
       .then(function (s) {
         return s.json()
       })
@@ -140,12 +135,8 @@
               return d.name;
             }
           })
-          .attr('x', function(d) {
-            return time_scale(d.closeApproach) - 110;
-          })
-          .attr('y', function(d) {
-            return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) + 20;
-          })
+          .attr('x',  d => time_scale(d.closeApproach) - 110)
+          .attr('y',  d => lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) + 20)
           .attr('foo', function(d) {
             drawLabelLine(asteroids, d3.select(this).node(), d3.select(d.el).node())
           });
@@ -172,12 +163,8 @@
             return className;
           })
           .attr("r", 30)
-          .attr("cx", function(d) {
-            return time_scale(d.closeApproach)
-          })
-          .attr("cy", function(d) {
-            return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)
-          });
+          .attr("cx",  d => time_scale(d.closeApproach))
+          .attr("cy", d => lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE));
 
       drawVoronoi(rows);
     });
@@ -248,13 +235,9 @@
       .data([time_scale(d3.timeMonth.offset(date, -1 * months)), time_scale(d3.timeMonth.offset(date, months))])
       .enter()
         .append("line")
-          .attr("x1", function(d) {
-            return d;
-          })
+          .attr("x1", d => d)
           .attr("y1", offsetTop)
-          .attr("x2", function(d) {
-            return d;
-          })
+          .attr("x2", d => d)
           .attr("y2", height - offsetBottom)
           .attr("class", classname);
   }
