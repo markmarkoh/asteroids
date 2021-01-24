@@ -43,29 +43,17 @@
     drawRulers();
     drawTimeAxis();
     drawEarthAndMoon();
-    drawNeos('https://query.data.world/s/7tmju3kaa04lek25pt2h1gpi3');
+    drawNeos();
     setupControls();
   }
 
-/*
-
-CA DistanceMinimum(LD/AU): "3.6/0.0094"
-CA DistanceNominal(LD/AU): "3.7/0.0094"
-Close-Approach (CA) Date (TDB)YYYY-mmm-DD HH:MM ± D_HH:MM: "2015-Mar-19 06:53 ±"
-H(mag): "25.4"
-Nsigma: "2.68e+03"
-Object: "(2015 FK)"
-Vinfinity(km/s): "6.98"
-Vrelative(km/s): "7.02"
-*/
-
-  function drawNeos(url) {
+  function drawNeos() {
     const max = new Date();
     const min = new Date();
     const fmt = d3.timeFormat('%Y-%m-%d')
     max.setUTCFullYear( max.getUTCFullYear() + 1)
     min.setUTCFullYear( min.getUTCFullYear() - 1)
-    fetch('https://ssd-api.jpl.nasa.gov/cad.api?www=1&nea-comet=Y&dist-max=16LD&fullname=true&date-min=' + fmt(min) + '&date-max=' + fmt(max) + '&h-max=27')
+    fetch(`https://ssd-api.jpl.nasa.gov/cad.api?www=1&nea-comet=Y&dist-max=${MAX_LDS + 1}LD&fullname=true&date-min=${fmt(min)}&date-max=${fmt(max)}&h-max=27`)
       .then(function (s) {
         return s.json()
       })
@@ -82,7 +70,6 @@ Vrelative(km/s): "7.02"
 
         const AU_TO_LD = 389.577688525899
 
-//	"2020-Jan-25 07:23"
         const dateParser = d3.timeParse('%Y-%b-%d %H:%M')
 
         return Promise.resolve(data.map(function(asteroid) {
@@ -118,6 +105,7 @@ Vrelative(km/s): "7.02"
               className += " small";
             }
 
+            // assume asteroids named "XF (2020)" were discovered in 2020.
             if (new RegExp('\(' + d.closeApproach.getFullYear() + '.*\)').test(d.name)) {
               className += " new";
             }
@@ -372,39 +360,14 @@ Vrelative(km/s): "7.02"
 
           return time_scale(d3.timeMonth.offset(date, d)) - offset + "px"
         })
-
-
-    return;
-    var xAxis = d3.svg.axis()
-        .scale(time_scale)
-        .orient("top")
-        .ticks(d3.timeMonths, 3)
-        .tickSize(10, 0)
-        .tickPadding(5)
-        .tickFormat(function(d) {
-          return "hi" ; // d3.time.format("%b %Y")
-        });
-
-    sky.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0, 10)")
-        .call(xAxis)
-      .selectAll(".tick text")
-        .style("text-anchor", "start")
-        .attr("x", 6)
-        .attr("y", 0);
   }
 
   function drawVoronoi(data) {
-
     var popover = d3.select("#popover");
-
     var voronoi = d3.voronoi()
       .x(function(d) {return time_scale(d.closeApproach) })
       .y(function(d) { return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) })
       .extent([[-1, -1], [width+1, height+1]]);
-
-
     var voronoiGroup = sky.append("g")
       .attr("class", "voronoi");
 
@@ -417,9 +380,6 @@ Vrelative(km/s): "7.02"
         }
         return "M" + d.join("L") + "Z";
      })
-    /*.datum(function(d) {
-      return d && d.point;
-     })*/
     .on("mouseenter", function(evt, {data}) {
       popover.select("#name").text('Asteroid ' + data.name);
       var approachPrefix = 'Passed Earth on ';
@@ -458,20 +418,8 @@ Vrelative(km/s): "7.02"
   }
 
   draw();
-  // window.addEventListener('resize', function() {
-  //   document.getElementById('ticks').innerHTML = '';
-  //   var viz = document.getElementById('viz');
-  //   Array.prototype.forEach.call(viz.children, function(child) { viz.removeChild(child) });
-  //   viz.innerHTML = '';
-  //   var svg = document.createElement('svg');
-  //   svg.setAttribute('id', 'sky');
-  //   viz.appendChild(svg)
-  //   draw();
-  // });
   //important stuff
   new K('http://www.freeasteroids.org/');
-
-
 })(window)
 
 function getParameterByName(name) {
