@@ -1,42 +1,42 @@
 (function(root) {
+  let sky;
 
-  var sky, height, width;
-  var failedDownloadInitialFile = false;
-  var lunar_distance_scale, time_scale, size_scale, hmag_scale;
-  var LUNAR_DISTANCE, MAX_LDS;
-  var offsetTop, offsetBottom;
-  var ldParam = parseInt(getParameterByName('lds'), 10)
-  function draw() {
-    sky = d3.select("#sky");
-    var header_height = document.getElementById("metadata").offsetHeight + document.getElementById("ticks").offsetHeight;
-    var window_height = window.innerHeight;
-    height = window_height - header_height - 25;
-    width = ~~sky.style("width").replace("px", "");
-    sky.attr("height", height);
+  const offsetTop = 40;
+  const offsetBottom = 40;
 
-    offsetTop = 40;
-    offsetBottom = 40;
+  // URL params / settings
+  const ldParam = parseInt(getParameterByName('lds'), 10)
+  const MAX_LDS = isNaN(ldParam) ? 15 : ldParam;
+  
+  // Bounding box calcs
+  const header_height = document.getElementById("metadata").offsetHeight + document.getElementById("ticks").offsetHeight;
+  const window_height = window.innerHeight;
+  const height = window_height - header_height - 25;
+  const width = document.querySelector('#sky').clientWidth;
 
-    LUNAR_DISTANCE = 384400; //km
+  // Globals
+  const LUNAR_DISTANCE = 384400; // km
+  const AU_TO_LD = 389.577688525899
+  const dateParser = d3.timeParse('%Y-%b-%d %H:%M')
+  const date = new Date();
 
-    MAX_LDS = isNaN(ldParam) ? 15 : ldParam;
-
-    lunar_distance_scale = d3.scaleLinear()
+  // Setup Scales
+  const lunar_distance_scale = d3.scaleLinear()
       .domain([0, MAX_LDS * LUNAR_DISTANCE])
       .range([10, height - 50]);
-
-    var date = new Date();
-    time_scale = d3.scaleTime()
+  const time_scale = d3.scaleTime()
       .domain([d3.timeYear.offset(date, 1),  d3.timeYear.offset(date, -1)])
       .rangeRound([width, 0]);
-
-    size_scale = d3.scaleLog()
+  const size_scale = d3.scaleLog()
       .domain([30, 17])
       .range([0.5, 4]);
-
-    hmag_scale = d3.scaleLinear()
+  const hmag_scale = d3.scaleLinear()
     .domain([30, 29,  28,   27,   26, 25,  24, 23, 22,   21,  20,  19, 18])
     .range([4.5, 6.5, 11.5, 17.5, 27, 42.5, 65, 90, 170,  210, 330, 670, 1000]);
+
+  function draw() {
+    sky = d3.select("#sky");
+    sky.attr("height", height);
 
     drawGuideLines("guide-light", 4);
     drawGuideLines("guide-light", 8);
@@ -68,9 +68,6 @@
           return zipObject(r.fields, asteroid)
         })
 
-        const AU_TO_LD = 389.577688525899
-
-        const dateParser = d3.timeParse('%Y-%b-%d %H:%M')
 
         return Promise.resolve(data.map(function(asteroid) {
           return {
@@ -87,14 +84,14 @@
         return row.ldNominal <= MAX_LDS + 0.5;
       });
 
-      var asteroids = sky.append("g").attr("class", "asteroids");
+      const asteroids = sky.append("g").attr("class", "asteroids");
       asteroids.selectAll("asteroid")
         .data(rows)
         .enter()
           .append("ellipse")
           .attr("class", function(d) {
             d.el = this;
-            var className = '';
+            let className = '';
             if ( d.h < 21 ) {
               className += " huge";
             }
@@ -129,7 +126,7 @@
             return "rotate(34, " + [time_scale(d.closeApproach), lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE)].join(",") + ")";
           });
 
-      var bigOnes = rows.filter(function(val) { return val.h < 21 });
+      const bigOnes = rows.filter(function(val) { return val.h < 21 });
       asteroids.selectAll('ruler-label')
         .data(bigOnes)
         .enter()
@@ -159,7 +156,7 @@
           .append("circle")
           .attr("class", function(d) {
             d.ringEl = this;
-            var className = 'asteroid-rings';
+            let className = 'asteroid-rings';
             if ( d.h < 21 ) {
                className += " asteroid-rings-huge";
             }
@@ -207,15 +204,15 @@
   }
 
   function drawEarthAndMoon() {
-    var earthAndMoon = sky.append("g").attr("class", "earth-and-moon");
+    const earthAndMoon = sky.append("g").attr("class", "earth-and-moon");
 
-    var earth = earthAndMoon.append("circle")
+    const earth = earthAndMoon.append("circle")
       .attr("class", "earth")
       .attr("r", 12)
       .attr("cx", width / 2)
       .attr("cy", 0)
 
-    var earthLabel = earthAndMoon.append("text")
+    const earthLabel = earthAndMoon.append("text")
       .attr("class", "ruler-label")
       .text("Earth")
       .attr("x", width / 2 + 90)
@@ -223,13 +220,13 @@
 
     drawLabelLine(earthAndMoon, earthLabel.node(), earth.node(), true);
 
-    var moon = earthAndMoon.append("circle")
+    const moon = earthAndMoon.append("circle")
       .attr("class", "moon")
       .attr("r", 3.5)
       .attr("cx", width / 2)
       .attr("cy", lunar_distance_scale(LUNAR_DISTANCE))
 
-    var moonLabel = earthAndMoon.append("text")
+    const moonLabel = earthAndMoon.append("text")
       .attr("class", "ruler-label")
       .text("Moon")
       .attr("x", width / 2 + 83)
@@ -245,8 +242,7 @@
   }
 
   function drawGuideLines(classname, months) {
-    var date = new Date();
-    var guides = sky.append("g");
+    const guides = sky.append("g");
 
     guides.selectAll("guide")
       .data([time_scale(d3.timeMonth.offset(date, -1 * months)), time_scale(d3.timeMonth.offset(date, months))])
@@ -267,15 +263,12 @@
     container.append("path")
       .attr("class", "label-line")
       .attr("d", function() {
-        var multiplyer = 1;
-        if ( onRightSide === true ) {
-          multiplyer = -1;
-        }
-        var elStartBox = elStart.getBBox();
-        var elEndBox = elEnd.getBBox();
-        var step1 = (elStartBox.x + (multiplyer * (elStartBox.width + 3))) + "," + (elStartBox.y + (elStartBox.height / 2));
-        var step2 = (elStartBox.x + (multiplyer * elStartBox.width + 25)) + "," + (elStartBox.y + (elStartBox.height / 2));
-        var step3 = (elEndBox.x + (elEndBox.width / 2) - 3) + "," + (elEndBox.y + elEndBox.height + 3);
+        const multiplyer = onRightSide ? -1 : 1
+        const elStartBox = elStart.getBBox();
+        const elEndBox = elEnd.getBBox();
+        const step1 = (elStartBox.x + (multiplyer * (elStartBox.width + 3))) + "," + (elStartBox.y + (elStartBox.height / 2));
+        const step2 = (elStartBox.x + (multiplyer * elStartBox.width + 25)) + "," + (elStartBox.y + (elStartBox.height / 2));
+        const step3 = (elEndBox.x + (elEndBox.width / 2) - 3) + "," + (elEndBox.y + elEndBox.height + 3);
         if ( onRightSide === true ) {
           return ["M", step2, "L", step1, "L", step3].join("");
         }
@@ -284,9 +277,9 @@
   }
 
   function drawRulers() {
-    var range = d3.range(1, MAX_LDS + 1);
+    const range = d3.range(1, MAX_LDS + 1);
 
-    var rulerGroup = sky.append("g");
+    const rulerGroup = sky.append("g");
 
     rulerGroup.selectAll("ruler")
       .data(range)
@@ -335,10 +328,7 @@
   }
 
   function drawTimeAxis() {
-
-    var data = [-8, -4, 0, 4, 8];
-    var date = new Date();
-
+    const data = [-8, -4, 0, 4, 8];
     d3.select('#ticks')
       .selectAll('ticks')
       .data(data)
@@ -355,7 +345,7 @@
           return "In " + d + " months";
         })
         .style("left", function(d) {
-          var offset = 50;
+          let offset = 50;
           if ( d === 0 || d === d3.max(data) ) offset = 88;
 
           return time_scale(d3.timeMonth.offset(date, d)) - offset + "px"
@@ -363,12 +353,12 @@
   }
 
   function drawVoronoi(data) {
-    var popover = d3.select("#popover");
-    var voronoi = d3.voronoi()
+    const popover = d3.select("#popover");
+    const voronoi = d3.voronoi()
       .x(function(d) {return time_scale(d.closeApproach) })
       .y(function(d) { return lunar_distance_scale(d.ldNominal * LUNAR_DISTANCE) })
       .extent([[-1, -1], [width+1, height+1]]);
-    var voronoiGroup = sky.append("g")
+    const voronoiGroup = sky.append("g")
       .attr("class", "voronoi");
 
     voronoiGroup.selectAll("path")
@@ -382,8 +372,8 @@
      })
     .on("mouseenter", function(evt, {data}) {
       popover.select("#name").text('Asteroid ' + data.name);
-      var approachPrefix = 'Passed Earth on ';
-      var distancePrefix = 'It came within ';
+      let approachPrefix = 'Passed Earth on ';
+      let distancePrefix = 'It came within ';
       if (data.closeApproach > new Date()) {
         approachPrefix = 'Approaches Earth on ';
         distancePrefix = 'It will come within ';
@@ -392,7 +382,7 @@
       popover.select("#minimum").html(distancePrefix + '<strong>' + data.ldNominal.toFixed(1) + ' LDs</strong>, and its')
       popover.select("#size").text(hmag_scale(data.h).toFixed(1) + ' meters.');
       popover.select("#h").text(data.h);
-      var popEl = popover._groups[0][0]
+      const popEl = popover._groups[0][0]
       popEl.style.top = data.el.getBBox().y + 100 + 'px';
 
       if (data.el.cx.baseVal.value > width / 2 ) {
@@ -423,8 +413,6 @@
 })(window)
 
 function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    const searchParams = new URLSearchParams(window.location.search)
+    return searchParams.get(name);
 }
