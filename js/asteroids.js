@@ -7,6 +7,7 @@
   // URL params / settings
   const ldParam = parseInt(getParameterByName('lds'), 10)
   const MAX_LDS = isNaN(ldParam) ? 15 : ldParam;
+  const JWST = 'James Webb';
   
   // Bounding box calcs
   const header_height = document.getElementById("metadata").offsetHeight + document.getElementById("ticks").offsetHeight;
@@ -79,6 +80,14 @@
         return row.ldNominal <= MAX_LDS + 0.5;
       });
 
+      rows.push({
+        name: JWST,
+        h: 15,
+        closeApproach: new Date(),
+        ldMinimum: 3.9021,
+        ldNominal: 3.9021
+      })
+
       const asteroids = sky.append("g").attr("class", "asteroids");
       asteroids.selectAll("asteroid")
         .data(rows)
@@ -87,7 +96,10 @@
           .attr("class", function(d) {
             d.el = this;
             let className = '';
-            if ( d.h < 21 ) {
+            if (d.name === JWST) {
+              className += " webb"
+            }
+            else if ( d.h < 21 ) {
               className += " huge";
             }
             else if ( d.h < 24.5 ) {
@@ -354,17 +366,24 @@
         return "M" + d.join("L") + "Z";
      })
     .on("mouseenter", function(evt, {data}) {
-      popover.select("#name").text('Asteroid ' + data.name);
-      let approachPrefix = 'Passed Earth on ';
-      let distancePrefix = 'It came within ';
-      if (data.closeApproach > new Date()) {
-        approachPrefix = 'Approaches Earth on ';
-        distancePrefix = 'It will come within ';
-      }
-      popover.select("#approach").text(approachPrefix + ' ' + data.closeApproach.toLocaleDateString() + '.')
+      if (data.name === JWST) {
+        popover.select('#name').text('James Webb Space Telescope')
+        popover.select('#approach').text('This telescope is in L2, orbiting the sun, its'); 
+        popover.select('#minimum').text('');
+        popover.select('#size').text('13.2 meters long');
+      } else {
+        popover.select("#name").text('Asteroid ' + data.name);
+        let approachPrefix = 'Passed Earth on ';
+        let distancePrefix = 'It came within ';
+        if (data.closeApproach > new Date()) {
+          approachPrefix = 'Approaches Earth on ';
+          distancePrefix = 'It will come within ';
+        }
+        popover.select("#approach").text(approachPrefix + ' ' + data.closeApproach.toLocaleDateString() + '.')
       popover.select("#minimum").html(distancePrefix + '<strong>' + data.ldNominal.toFixed(1) + ' LDs</strong>, and its')
       popover.select("#size").text(hmag_scale(data.h).toFixed(1) + ' meters.');
       popover.select("#h").text(data.h);
+      }
       const popEl = popover._groups[0][0]
       popEl.style.top = data.el.getBBox().y + 100 + 'px';
 

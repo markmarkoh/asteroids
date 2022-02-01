@@ -74,6 +74,12 @@ circle.earth {
   stroke: #FFF;
 }
 
+.webb.asteroid {
+  fill: none;
+  stroke-width: 3px;
+  stroke: green;
+}
+
 .asteroid {
   fill: #CCC;
   stroke: #CCC;
