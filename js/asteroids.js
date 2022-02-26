@@ -26,8 +26,8 @@
       .domain([0, MAX_LDS * LUNAR_DISTANCE])
       .range([10, height - 50]);
   const time_scale = d3.scaleTime()
-      .domain([d3.timeYear.offset(date, 1),  d3.timeYear.offset(date, -1)])
-      .rangeRound([width, 0]);
+      .domain([d3.timeYear.offset(date, -1),  d3.timeYear.offset(date, 1)])
+      .range([0, width]);
   const size_scale = d3.scaleLog()
       .domain([30, 17])
       .range([0.5, 4]);

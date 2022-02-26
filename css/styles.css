@@ -3,10 +3,10 @@
 }
 
 body {
-  background-color: #1A1A1A; //from nyt kepler
+  /* background-color: #1A1A1A; //from nyt kepler */
   overflow: hidden;
   height: 100%;
-  color: #FFF;
+  /* color: #FFF; */
   -webkit-transition:color 0.2s, background-color 0.2s, fill 0.2s, -webkit-transform 0.2s;
   transition:color 0.2s, background-color 0.2s, fill 0.2s;
 }

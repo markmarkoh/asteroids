@@ -24,80 +24,7 @@ Many NEOs aren't discovered until they've nearly passed us in their orbit, which
   <title>Asteroids</title>
 </head>
 <body>
-  <div id="metadata">
-    <div class="row center">
-      <h2>Asteroids: Near Earth Approaches</h2>
-    </div>
-    <div class="row">
-      <div class="four columns">
-        <ul class="controls">
-          <li>
-            <label title="As determined by its asteroid absolute V-magnitude (H) value being 24.5 or lower">
-              <input type="checkbox" name="show-big"/>
-              Show asteroids 50m and above <em>(2x larger than <a href="http://en.wikipedia.org/wiki/Chelyabinsk_meteor" target="_blank">Chelyabinsk meteor</a>)</em>
-            </label>
-          </li>
-          <li>
-            <label title="As determined by its asteroid absolute V-magnitude (H) value being 21 or lower">
-              <input type="checkbox" name="show-huge" title="As determined by its asteroid absolute V-magnitude (H) value being 21 or lower"/>
-              Show asteroids 200m and above
-            </label>
-          </li>
-          <li>
-            <label class="new" title="As determined by the year of it being discovered being the same year as its close approach date">
-              <input type="checkbox" name="show-new"/>
-               Highlight asteroids we didn't find until they neared Earth
-            </label>
-          </li>
-        </ul>
-      </div>
-      <div class="four columns center">
-        <div class="description">A visualization of known and tracked <a href="http://neo.jpl.nasa.gov/cgi-bin/neo_ca?type=NEO&hmax=all&sort=date&sdir=ASC&tlim=far_future&dmax=10LD&max_rows=500&action=Display+Table&show=1" target="_blank">Near Earth Asteroids, or NEAs</a> that will make a close approach to Earth within the next 12 months, or have made a close approach within the last 12 months, as tracked by <a target="_blank" href="http://neo.jpl.nasa.gov/index.html">NASA's JPL NEO program.</a><br/>
-          Many NEAs aren't discovered until they've nearly passed us in their orbit of the sun, which is why one side of this graph is so much more populated than the other. The view in our rear-view mirror is better than the one through our windsheild.
-        </div>
-      </div>
-      <div class="four columns right key tk-source-code-pro">
-          <div>1 Lunar Distance = 384,400km</div>
-          <div>Moon Diameter = 3,475km</div>
-          <!-- <div>Earth Diameter = 12,742km</div> -->
-          <div>
-          <svg class="legend" width="375px" height="20px">
-            <text x="5" y="15">Small (&lt; 10m)</text>
-            <circle class="asteroid small" cx="95" cy="10" r="1"></circle>
-            <circle class="asteroid small" cx="125" cy="10" r="2"></circle>
-            <circle class="asteroid big" cx="155" cy="10" r="2"></circle>
-            <circle class="asteroid big" cx="185" cy="10" r="3"></circle>
-            <circle class="asteroid huge" cx="215" cy="10" r="3"></circle>
-            <circle class="asteroid huge" cx="245" cy="10" r="4"></circle>
-            <text x="265" y="15">Large (&gt; 300m)</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="ticks"></div>
-  <div class="tk-source-code-pro" id="viz">
     <svg id="sky"></svg>
-  </div>
-  <div class="links">
-    <ul>
-      <li class="help">
-          <div>Asteroids englarged for visibility</div>
-      </li>
-      <li class="control">
-        <label>
-          <input type="checkbox" name="show-onlight"/>
-          View on light background
-        </label>
-      </li>
-      <li>
-        <a target="_blank" href="https://cneos.jpl.nasa.gov/ca/" class="sources">NEO Data Sources</a>
-      </li>
-      <li>
-        <a target="_blank" href="https://github.com/markmarkoh/asteroids" class="git sources">Project Source Code</a>
-      </li>
-		</ul>
-  </div>
   <div id="popover" class="popover">
     <div class="name"><strong id="name"></strong></div>
     <div><span id="approach"></span></div>
@@ -109,7 +36,7 @@ Many NEOs aren't discovered until they've nearly passed us in their orbit, which
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script src="https://d3js.org/d3-voronoi.v1.min.js"></script>
   <script src="js/keyboard.js"></script>
-  <script src="js/asteroids.js"></script>
+  <script src="js/asteroids-wip.js"></script>
   <script src="//use.typekit.net/bvj7kmh.js"></script>
   <script>try{Typekit.load();}catch(e){}</script>
   <script>
