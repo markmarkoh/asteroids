@@ -62,16 +62,12 @@ html, body {
   margin: 0;
 }
 
-circle.earth {
-  fill: #4118DC;
-  stroke: #00D100;
-  stroke-width: 2px;
+text.earth {
+  font-size: 25px;
 }
 
-.moon {
-  fill: #DFDFDF;
-  stroke-width: 2px;
-  stroke: #FFF;
+text.moon {
+  font-size: 15px;
 }
 
 .webb.asteroid {
