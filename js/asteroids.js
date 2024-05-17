@@ -52,7 +52,7 @@
   }
 
   function drawNeos() {
-    fetch("http://d33bz6js14grvw.cloudfront.net/asteroids-data-15-lds4.json")
+    fetch("https://d33bz6js14grvw.cloudfront.net/asteroids-data-15-lds4.json")
       .then(function(s) {
         return s.json();
       })
